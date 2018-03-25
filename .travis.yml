@@ -6,7 +6,7 @@ services:
   - docker
 env:
   global:
-    - IMAGE="grantmacken/exist-make"
+    - IMAGE="grantmacken/alpine-exist"
 before_script:
 - docker pull "$IMAGE" || true
 script:
