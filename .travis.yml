@@ -1,0 +1,17 @@
+sudo: required
+dist: trusty
+os: linux
+language: c
+services:
+  - docker
+env:
+  global:
+    - IMAGE="grantmacken/exist-make"
+before_script:
+- docker pull "$IMAGE" || true
+script:
+  - docker build --pull --cache-from "$IMAGE" --tag "$IMAGE" .
+  - docker run -d $IMAGE
+
+after_script:
+- docker images
