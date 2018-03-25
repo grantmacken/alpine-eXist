@@ -10,7 +10,10 @@ env:
 before_script:
   - docker pull "$IMAGE" || true
 script:
+  - docker build --pull --cache-from "$IMAGE" --tag "$IMAGE" .
   - docker run -d $IMAGE
+  - docker images
+  - docker ps
 
 after_script:
 - docker images
