@@ -5,6 +5,11 @@
 
 ![GitHub last commit](https://img.shields.io/github/last-commit/grantmacken/alpine-eXist.svg)
 
+[![](https://images.microbadger.com/badges/image/grantmacken/alpine-exist.svg)](https://microbadger.com/images/grantmacken/alpine-exist "Get your own image badge on microbadger.com")
+
+[![](https://images.microbadger.com/badges/version/grantmacken/alpine-exist.svg)](https://microbadger.com/images/grantmacken/alpine-exist "Get your own version badge on microbadger.com")
+
+[![FROM  openjdk:8-jre-alpine](https://images.microbadger.com/badges/image/openjdk:8-jre-alpine.svg)](https://microbadger.com/images/openjdk:8-jre-alpine "Get your own image badge on microbadger.com")
 
 ## specify port to run 
 ```

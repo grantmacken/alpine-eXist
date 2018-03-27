@@ -1,5 +1,9 @@
 FROM openjdk:8-jre-alpine as packager
-# exposes $JAVA_HOME + java in $PATH
+# exposes java in $PATH
+# and following ENV
+# JAVA_HOME
+# PATH
+# JAVA_ALPINE_VERSION
 
 LABEL maintainer="Grant Mackenzie <grantmacken@gmail.com>" \
       org.label-schema.build-date=$(date --iso) \
