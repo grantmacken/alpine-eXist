@@ -6,10 +6,10 @@ FROM openjdk:8-jre-alpine as packager
 # JAVA_ALPINE_VERSION
 
 LABEL maintainer="Grant Mackenzie <grantmacken@gmail.com>" \
-      org.label-schema.build-date=$(date --iso) \
-      org.label-schema.vcs-ref=$(git rev-parse --short HEAD) \
-      org.label-schema.vcs-url=https://github.com/grantmacken/alpine-eXist
-      org.label-schema.version=0.0.1 \
+      org.label-schema.build-date="$(date --iso)" \
+      org.label-schema.vcs-ref="$(git rev-parse --short HEAD)" \
+      org.label-schema.vcs-url="https://github.com/grantmacken/alpine-eXist"
+      org.label-schema.version="0.0.1" \
       org.label-schema.schema-version="1.0"
 
 ENV EXIST_HOME /user/local/eXist
