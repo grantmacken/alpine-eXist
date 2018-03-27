@@ -1,10 +1,7 @@
-#DOCKER TARGETS
-
 DOCKER_IMAGE ?= grantmacken/alpine-exist
 GH_PRE := ^git@github\.com:
 GH_SUB := https://github.com/
 GH_SUF := \.git$
-
 
 T := tmp
 ifeq ($(wildcard $(T)),)
@@ -15,7 +12,7 @@ P := admin
 
 .SECONDARY:
 
-default: exInstall
+default: $(T)/eXist-expect.log
 
 build: VERSION
 	@echo "## $@ ##"
@@ -26,19 +23,6 @@ build: VERSION
 
 push:
 	@docker push $(DOCKER_IMAGE):latest
-
-exInstallDownload:
-	@echo "## $@ ##"
-	@$(MAKE) --silent $(T)/eXist-latest.version
-	@cat $(T)/eXist-latest.version
-	@echo '------------------------------------'
-
-exInstall: exInstallDownload
-exInstall:
-	@echo "## $@ ##"
-	@$(MAKE) --silent $(T)/wget-eXist.log
-	@$(MAKE) --silent $(T)/eXist-expect.log
-	@echo '======================================='
 
 $(T)/eXist-latest.version:
 	@echo "## $@ ##"
@@ -62,7 +46,6 @@ $(T)/eXist.expect: $(T)/wget-eXist.log
 	@echo "## $(notdir $@) ##"
 	@echo 'TASK: creating expect file'
 	@echo '#!$(shell which expect) -f' > $(@)
-	@echo exit
 	echo 'spawn java -jar $(T)/$(shell cat tmp/eXist-latest.version) -console' >> $(@)
 	@echo 'expect "Select target path" { send "$(EXIST_HOME)\n" }'  >> $(@)
 	@echo 'expect "*ress 1" { send "1\n" }'  >> $(@)
@@ -78,11 +61,11 @@ $(T)/eXist.expect: $(T)/wget-eXist.log
 	@echo ' wait'  >> $(@)
 	@echo ' exit'  >> $(@)
 	@echo '}'  >> $(@)
-	@chmod +x $(@)
 	@echo '---------------------------------------'
 
 $(T)/eXist-expect.log: $(T)/eXist.expect
 	@echo "## $(notdir $@) ##"
 	@echo "TASK: install eXist via expect script. Be Patient! this can take a few minutes"
+	@chmod +x $(<)
 	@$(<) | tee $(@)
 	@echo '---------------------------------------'
