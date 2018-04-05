@@ -1,20 +1,13 @@
-DOCKER_IMAGE ?= grantmacken/alpine-exist
-GH_PRE := ^git@github\.com:
-GH_SUB := https://github.com/
-GH_SUF := \.git$
+include .env
 
 T := tmp
-ifeq ($(wildcard $(T)),)
- $(shell  mkdir $(T))
-endif
-
 P := admin
 
 .SECONDARY:
 
 default: $(T)/eXist-expect.log
 
-build: VERSION
+build:
 	@echo "## $@ ##"
 	@echo 'TASK: build the docker image'
 	@docker build \
