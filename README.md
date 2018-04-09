@@ -9,16 +9,22 @@
 
 Built from openjdk:8-jre-alpine image [![](https://images.microbadger.com/badges/image/openjdk:8-jre-alpine.svg)](https://microbadger.com/images/openjdk:8-jre-alpine "Get your own image badge on microbadger.com")
 
+## for local dev use docker-compose
 
-## specify port to run 
 ```
-# run in detached mode
-docker run -d -p 8181:8080 grantmacken/alpine-exist:latest
-firefox http://localhost:8181
-# if port 8080 is avaliable
-docker run -d -p 8080:8080 grantmacken/alpine-exist:latest
-firefox http://localhost:8080
+docker-compose up
+docker-compose down
 ```
+
+The docker-compose file creates a 
+persistent docker volume 'data' so the 
+important stuff in ${EXIST_HOME}/${EXIST_DATA_DIR}
+hangs around.
+
+## passwrd
+ 
+There is none, so change this ASAP
+dba user is admin 
 
 ## disable entrypoint to look into container
 
@@ -27,3 +33,6 @@ docker run --entrypoint "" grantmacken/alpine-exist:latest ls .
 docker run --entrypoint "" grantmacken/alpine-exist:latest which java
 docker run --entrypoint "" grantmacken/alpine-exist:latest ls /usr/lib/jvm
 ```
+
+
+
