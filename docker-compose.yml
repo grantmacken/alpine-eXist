@@ -1,0 +1,22 @@
+version: '3.4'
+services:
+  exist:
+    image: grantmacken/alpine-exist:latest
+    container_name: ex
+    ports:
+        - 8080:8080
+    networks:
+      - www
+    volumes:
+      - type: volume
+        source: data
+        target: ${EXIST_HOME}/${EXIST_DATA_DIR}
+
+volumes:
+  data:
+    driver: local
+    name: data
+
+networks:
+  www:
+    driver: bridge
