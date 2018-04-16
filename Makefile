@@ -12,7 +12,7 @@ build: export EXIST_VERSION := $(shell \
 build:
 	@echo "## $@ ##"
 	@echo 'TASK: build the docker image'
-	@echo "latest eXist version $$VERSION"
+	@echo "latest eXist version $$EXIST_VERSION"
 	@docker build --tag="$(DOCKER_IMAGE):$$EXIST_VERSION" .
 
 push: export EXIST_VERSION := $(shell \
