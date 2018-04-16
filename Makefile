@@ -1,7 +1,6 @@
 include .env
 
 T := tmp
-P := admin
 
 .SECONDARY:
 
@@ -45,8 +44,8 @@ $(T)/eXist.expect: $(T)/wget-eXist.log
 	@echo 'expect "Set Data Directory" { send "$(EXIST_DATA_DIR)\n" }' >> $(@)
 	@echo 'expect "*ress 1" { send "1\n" }' >> $(@)
 	@echo 'expect "*ress 1" { send "1\n" }' >> $(@)
-	@echo 'expect "Enter password" { send "$(P)\n" }' >> $(@)
-	@echo 'expect "Enter password" { send "$(P)\n" }' >> $(@)
+	@echo 'expect "Enter password" { send "\n" }' >> $(@)
+	@echo 'expect "Enter password" { send "\n" }' >> $(@)
 	@echo 'expect "Maximum memory" { send "\n" }'  >> $(@)
 	@echo 'expect "Cache memory" { send "\n" }'  >> $(@)
 	@echo 'expect "*ress 1" {send "1\n"}'  >> $(@)
