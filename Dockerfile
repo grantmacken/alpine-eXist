@@ -11,7 +11,7 @@ LABEL maintainer="Grant Mackenzie <grantmacken@gmail.com>" \
       org.label-schema.vcs-url="https://github.com/grantmacken/alpine-eXist" \
       org.label-schema.schema-version="1.0"
 
-ENV EXIST_HOME /user/local/eXist
+ENV EXIST_HOME /usr/local/eXist
 ENV EXIST_DATA_DIR webapp/WEB-INF/data
 ENV INSTALL_PATH /grantmacken
 
@@ -30,13 +30,13 @@ RUN apk add --no-cache --virtual .build-deps \
         && apk del .build-deps
 
 FROM openjdk:8-jre-alpine
-COPY --from=packager /user/local/eXist /user/local/eXist
-COPY ./src/mime-types.xml /user/local/eXist/
+COPY --from=packager /usr/local/eXist /usr/local/eXist
+COPY ./src/mime-types.xml /usr/local/eXist/
 
 ENV LANG C.UTF-8
 EXPOSE 8080
 # #  VOLUME $EXIST_DATA_DIR
 
-ENV EXIST_HOME /user/local/eXist
+ENV EXIST_HOME /usr/local/eXist
 WORKDIR $EXIST_HOME
 ENTRYPOINT ["java", "-Djava.awt.headless=true", "-jar", "start.jar", "jetty"]
