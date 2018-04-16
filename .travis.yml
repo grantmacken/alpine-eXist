@@ -15,7 +15,11 @@ script:
   - docker ps
   - docker exec ex ls .
   - docker exec ex which java
-  - docker exec ex java -jar start.jar client -u admin -P admin -q -x 'system:get-version()'
+  - docker logs ex
+  - docker exec ex \
+ java -jar start.jar client \
+ -ouri=xmldb:exist://127.0.0.1:8080/exist/xmlrpc \
+ -u admin -P admin -q -x 'system:get-version()'
 
 after_script:
 - docker images
