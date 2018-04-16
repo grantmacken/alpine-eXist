@@ -15,7 +15,7 @@ script:
   - docker ps
   - docker exec ex ls .
   - docker exec ex which java
-  - docker exec ex java -jar start.jar client -u admin -P 'admin' -q -x 'system:get-version()'
+  - docker exec ex java -jar start.jar client -u admin -P admin -q -x 'system:get-version()'
 
 after_script:
 - docker images
