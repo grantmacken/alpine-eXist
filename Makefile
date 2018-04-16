@@ -13,7 +13,10 @@ build:
 	@echo "## $@ ##"
 	@echo 'TASK: build the docker image'
 	@echo "latest eXist version $$EXIST_VERSION"
-	@docker build --tag="$(DOCKER_IMAGE):$$EXIST_VERSION" .
+	@docker build \
+ --tag="$(DOCKER_IMAGE):$$EXIST_VERSION" \
+ --tag="$(DOCKER_IMAGE):latest" \
+ .
 
 push: export EXIST_VERSION := $(shell \
  curl -s -L https://bintray.com/existdb/releases/exist/_latestVersion  | \
