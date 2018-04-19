@@ -16,15 +16,15 @@ docker-compose up
 docker-compose down
 ```
 
-The docker-compose file creates a 
-persistent docker volume 'data' so the 
-important stuff in ${EXIST_HOME}/${EXIST_DATA_DIR}
+The docker-compose file creates a
+persistent docker volume 'data' so the
+important stuff in `${EXIST_HOME}/${EXIST_DATA_DIR}`
 hangs around.
 
-## passwrd
- 
+## password
+
 There is none, so change this ASAP
-dba user is admin 
+dba user is admin
 
 ## disable entrypoint to look into container
 
@@ -33,6 +33,3 @@ docker run --entrypoint "" grantmacken/alpine-exist:latest ls .
 docker run --entrypoint "" grantmacken/alpine-exist:latest which java
 docker run --entrypoint "" grantmacken/alpine-exist:latest ls /usr/lib/jvm
 ```
-
-
-
