@@ -15,6 +15,7 @@ ENV EXIST_HOME /usr/local/eXist
 ENV EXIST_DATA_DIR webapp/WEB-INF/data
 ENV INSTALL_PATH /grantmacken
 
+
 RUN mkdir -p $INSTALL_PATH
 WORKDIR $INSTALL_PATH
 COPY Makefile Makefile
