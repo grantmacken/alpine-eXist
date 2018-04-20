@@ -1,7 +1,7 @@
 # alpine-eXist
 [WIP] minimal docker image for exist-db
 
-[![Build Status](https://travis-ci.org/duncdrum/alpine-eXist.svg?branch=master)](https://travis-ci.org/duncdrum/alpine-eXist)
+[![Build Status](https://travis-ci.org/grantmacken/alpine-eXist.svg?branch=master)](https://travis-ci.org/grantmacken/alpine-eXist)
 ![GitHub last commit](https://img.shields.io/github/last-commit/grantmacken/alpine-eXist.svg)
 [![](https://images.microbadger.com/badges/image/grantmacken/alpine-exist.svg)](https://microbadger.com/images/grantmacken/alpine-exist "Get your own image badge on microbadger.com")
 [![](https://images.microbadger.com/badges/version/grantmacken/alpine-exist.svg)](https://microbadger.com/images/grantmacken/alpine-exist "Get your own version badge on microbadger.com")
@@ -12,10 +12,10 @@ Built from openjdk:8-jre-alpine image [![](https://images.microbadger.com/badges
 *   [Docker](https://www.docker.com)
 
 ## Running the container
-Pre-build images are available on [dockerhub](https://hub.docker.com/r/duncdrum/alpine-exist-db/)
+Pre-build images are available on [dockerhub](https://hub.docker.com/r/grantmacken/alpine-exist/)
 
 You can simply download them and run the image as usual, e.g.:
-`docker run -it -p 8080:8080 duncdrum/alpine-exist-db:latest`
+`docker run -it -p 8080:8080 grantmacken/alpine-exist:latest`
 
 dba user is the default `admin`.
 
