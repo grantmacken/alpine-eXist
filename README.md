@@ -33,17 +33,33 @@ docker run --entrypoint "" grantmacken/alpine-exist:latest ls /usr/lib/jvm
 ```
 
 
-## for local dev use docker-compose
-to start stop the dev container use:
+## for local develpment use docker-compose
+to start stop the container use:
 ```
-docker-compose up
+docker-compose up -d
 docker-compose down
 ```
 
 The docker-compose file creates a
-persistent docker volume 'data' so the
+1. A container name 'ex'. 
+2. A persistent docker volume named 'data' so the
 important stuff in `${EXIST_HOME}/${EXIST_DATA_DIR}`
 hangs around.
+3. A network named 'www'. 
+
+Be aware when using a reverse proxy in another container,
+don't use 'localhost', use 'ex' ( our named container ) instead, 
+and make sure it belongs to the same named docker 'www' network.
+
+```
+# nginx example
+location @proxy {
+  rewrite ^/?(.*)$ /exist/restxq/$domain/$1 break;
+  proxy_pass http://ex:8080;
+}
+```
+
+## Updating Image
 
 To update the base image (of e.g. exist-db) use:
 ```
@@ -57,6 +73,8 @@ docker inspect ex
 ```
 the name 'ex' is defined in `docker-compose.yml`
 
+
+
 ## Memory config
 To modify -Xmx and CACHE_MEMORY configurations for your exist instance, change `MAX_MEM` and `CACHE_MEM` in `.env` and then build your image in the usual fashion:
 
@@ -64,3 +82,4 @@ To modify -Xmx and CACHE_MEMORY configurations for your exist instance, change `
 cd alpine-eXist
 docker build .
 ```
+
