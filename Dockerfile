@@ -32,7 +32,6 @@ RUN apk add --no-cache --virtual .build-deps \
 
 FROM openjdk:8-jre-alpine
 COPY --from=packager /usr/local/eXist /usr/local/eXist
-COPY ./src/mime-types.xml /usr/local/eXist/
 
 ENV LANG C.UTF-8
 EXPOSE 8080
