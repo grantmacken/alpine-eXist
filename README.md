@@ -31,7 +31,11 @@ This repo provides a docker-compose file: 'docker-compose.yml'
 To bring the container up/down on port 8080 use
 
 ```
+# power up
 docker-compose up -d
+# view eXist log
+docker logs ex
+# power down
 docker-compose down
 ```
 
@@ -132,6 +136,9 @@ docker exec ex java -jar start.jar client -q -u admin -P nimda -x \
  'sm:passwd("admin", "admin")'
 ```
 
+[![asciicast](https://asciinema.org/a/TdZmETn9AXLd72jaNQVPnPoeC.png)](https://asciinema.org/a/TdZmETn9AXLd72jaNQVPnPoeC)
+
+
 ## Updating Image
 
 To update the base image (of e.g. exist-db) use:
@@ -147,11 +154,9 @@ docker inspect ex
 the name 'ex' is defined in `docker-compose.yml`
 
 
-
 ## Building Image
 
 Clone or Fork this repo.
-
 
 ### Memory config
 To modify -Xmx and CACHE_MEMORY configurations for your exist instance, change `MAX_MEM` and `CACHE_MEM` in `.env` and then build your image in the usual fashion:
