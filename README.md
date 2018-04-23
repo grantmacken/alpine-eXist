@@ -11,41 +11,81 @@ Built from openjdk:8-jre-alpine image [![](https://images.microbadger.com/badges
 ## Requirements
 *   [Docker](https://www.docker.com)
 
-## Running the container
+## Running the Container
 Pre-build images are available on [dockerhub](https://hub.docker.com/r/grantmacken/alpine-exist/)
 
+The latest build will always be the latest eXist release.
+Earlier versions may be avaiable.
+
 You can simply download them and run the image as usual, e.g.:
-`docker run -it -p 8080:8080 grantmacken/alpine-exist:latest`
-
-dba user is the default `admin`.
-
-## Caveat
-There is no password so change it ASAP
-
-
-## to look into the container...
-you need to disable the entrypoint (using ""). You can now, e.g.:
 
 ```
-docker run --entrypoint "" grantmacken/alpine-exist:latest ls .
-docker run --entrypoint "" grantmacken/alpine-exist:latest which java
-docker run --entrypoint "" grantmacken/alpine-exist:latest ls /usr/lib/jvm
+docker pull grantmacken/alpine-exist:latest
+docker run -p 8080:8080 grantmacken/alpine-exist:latest -d
 ```
 
+### Local Development with docker-compose
 
-## for local develpment use docker-compose
-to start stop the container use:
+This repo provides a docker-compose file: 'docker-compose.yml'
+
+To bring the container up/down on port 8080 use
+
 ```
 docker-compose up -d
 docker-compose down
 ```
 
-The docker-compose file creates a
+The  [eXist dashboard](http://localhost:8080/)
+will now be available on localhost port 8080
+
+#### Caveat
+
+The eXist dba user is the default `admin`.
+
+There is no password so change it ASAP
+
+You may do this via the eXist 
+[usermanager](http://localhost:8080/exist/apps/usermanager/index.html)
+ or see section 'Talking To eXist' below 
+
+### Starting Stopping eXist
+
+Once eXist is up and running in a docker container,
+you should now be able to stop and start eXist with the following commands
+
+```
+docker start ex
+docker stop ex
+```
+
+### Docker run time environment
+
+The docker-compose run time environment includes
 1. A container name 'ex'. 
 2. A persistent docker volume named 'data' so the
 important stuff in `${EXIST_HOME}/${EXIST_DATA_DIR}`
 hangs around.
 3. A network named 'www'. 
+4. A port published on 8080
+
+#### If docker-compose is not available
+
+On your remote host docker-compose might not be available.
+The equivalent docker commands to issue are
+
+```
+docker network create --driver=bridge www
+docker volume create --driver=local data
+docker run \
+  --name ex \
+  --network www \
+  --volume data:/usr/local/eXist/webapp/WEB-INF/data \
+  --publish 8080:8080 \
+  -d \
+  grantmacken/alpine-exist:latest'
+```
+
+### Using a Containerised Reverse Proxy 
 
 Be aware when using a reverse proxy in another container,
 don't use 'localhost', use 'ex' ( our named container ) instead, 
@@ -57,6 +97,39 @@ location @proxy {
   rewrite ^/?(.*)$ /exist/restxq/$domain/$1 break;
   proxy_pass http://ex:8080;
 }
+```
+
+## Docker Image Environment 
+
+1. in $PATH the *java* exec is available
+2. the following ENV vars
+    * JAVA_HOME
+    * EXIST_HOME
+    * JAVA_ALPINE_VERSION
+3.  the working directory is located in root directory of the eXist installation. 
+
+## Talking To eXist
+
+When the docker image is up and running  `docker-compose up -d`  
+you can issue execute commands on the running container.
+
+Examples:
+
+```
+# list EXIST_HOME dir contents
+docker exec ex ls -al .
+# get eXist version
+docker exec ex java -jar start.jar client -q -u admin -P admin -x \
+ 'system:get-version()' | tail -1 ; echo
+# list installed repos 
+docker exec ex java -jar start.jar client -q -u admin -P admin -x \
+ 'string-join(repo:list(), "&#10;")' ;  echo
+# change the admin pass to 'nimda'
+docker exec ex java -jar start.jar client -q -u admin -P admin -x \
+ 'sm:passwd("admin", "nimda")'
+# change the admin pass back to admin
+docker exec ex java -jar start.jar client -q -u admin -P nimda -x \
+ 'sm:passwd("admin", "admin")'
 ```
 
 ## Updating Image
@@ -75,7 +148,12 @@ the name 'ex' is defined in `docker-compose.yml`
 
 
 
-## Memory config
+## Building Image
+
+Clone or Fork this repo.
+
+
+### Memory config
 To modify -Xmx and CACHE_MEMORY configurations for your exist instance, change `MAX_MEM` and `CACHE_MEM` in `.env` and then build your image in the usual fashion:
 
 ```
