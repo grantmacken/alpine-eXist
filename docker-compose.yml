@@ -1,7 +1,7 @@
 version: '3.4'
 services:
   exist:
-    image: grantmacken/alpine-exist:latest
+    image: ${DOCKER_IMAGE}:latest
     container_name: ex
     ports:
         - 8080:8080
