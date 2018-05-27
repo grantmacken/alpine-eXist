@@ -8,28 +8,10 @@
 
 Built from openjdk:8-jre-alpine image [![](https://images.microbadger.com/badges/image/openjdk:8-jre-alpine.svg)](https://microbadger.com/images/openjdk:8-jre-alpine "Get your own image badge on microbadger.com")
 
-
 ## Why Alpine
 
  - [openjdk-roadmap-for-containers](https://blogs.oracle.com/developers/official-docker-image-for-oracle-java-and-the-openjdk-roadmap-for-containers)
  - You are most likely already have alpine layers in your container stack
-
-## Generic Tagged Images
-
-- dev:  smaller for your desktop
-- prod: small- safer for your cloud host
-- latest: same as dev
-
-## for your desktop os
- - grantmacken:alpine-eXist:latest
- - grantmacken:alpine-eXist:dev        # the latest development build
- - grantmacken:alpine-eXist:dev-v4.1.1  
-
-## for your cloud host
- - grantmacken:alpine-eXist:prod        # latest production build
- - grantmacken:alpine-eXist:prod-v4.1.1 # at eXist version 
-
-     # the latest development build
 
 ## Requirements
 *   [Docker](https://www.docker.com)
