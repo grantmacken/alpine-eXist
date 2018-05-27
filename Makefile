@@ -2,33 +2,49 @@ include .env
 
 T := tmp
 
-.SECONDARY:
-
 default: $(T)/eXist-expect.log
+	@echo ' remove install artifacts'
+	@rm -f \
+ $(EXIST_HOME)/uninstall.jar \
+ $(EXIST_HOME)/.installationinformation \
+ $(EXIST_HOME)/*.tmpl \
+ $(EXIST_HOME)/*.log \
+ $(EXIST_HOME)/*.xq \
+ $(EXIST_HOME)/*.sh \
+ $(EXIST_HOME)/icon.* \
+ $(EXIST_HOME)/*.html \
+ $(EXIST_HOME)/examples.jar \
+ $(EXIST_HOME)/atom-services.xml \
+ $(EXIST_HOME)/build.xml \
+ $(EXIST_HOME)/build.properties \
+ $(EXIST_HOME)/webapp/WEB-INF/*.tmpl \
+ $(EXIST_HOME)/tools/jetty/etc/standalone-* \
+ && rm -fr \
+ $(EXIST_HOME)/bin \
+ $(EXIST_HOME)/build \
+ $(EXIST_HOME)/installer \
+ $(EXIST_HOME)/samples \
+ $(EXIST_HOME)/src \
+ $(EXIST_HOME)/test \
+ $(EXIST_HOME)/tools/Solaris \
+ $(EXIST_HOME)/tools/appbundler \
+ $(EXIST_HOME)/tools/rulesets \
+ $(EXIST_HOME)/tools/yajsw \
+ $(EXIST_HOME)/extensions/debuggee \
+ $(EXIST_HOME)/extensions/exiftool \
+ $(EXIST_HOME)/extensions/metadata \
+ $(EXIST_HOME)/extensions/netedit \
+ $(EXIST_HOME)/extensions/security \
+ $(EXIST_HOME)/extensions/tomcat-realm \
+ $(EXIST_HOME)/extensions/xprocxq \
+ $(EXIST_HOME)/tools/jetty/standalone-webapps \
+ $(EXIST_HOME)/tools/jetty/etc/standalone
+	@echo ' FIN '
 
-build: export EXIST_VERSION := $(shell \
- curl -s -L https://bintray.com/existdb/releases/exist/_latestVersion  | \
- grep -oE 'eXist-db-setup-([0-9]+\.){2}([0-9]+)\.jar' | head -1 | grep -oE '([0-9]+\.){2}([0-9]+)' )
-build:
-	@echo "## $@ ##"
-	@echo 'TASK: build the docker image'
-	@echo "latest eXist version $$EXIST_VERSION"
-	@docker build \
- --tag="$(DOCKER_IMAGE):$$EXIST_VERSION" \
- --tag="$(DOCKER_IMAGE):latest" \
- .
-
-push: export EXIST_VERSION := $(shell \
- curl -s -L https://bintray.com/existdb/releases/exist/_latestVersion  | \
- grep -oE 'eXist-db-setup-([0-9]+\.){2}([0-9]+)\.jar' | head -1 | grep -oE '([0-9]+\.){2}([0-9]+)' )
-push:
-	@docker push $(DOCKER_IMAGE):$$EXIST_VERSION
-
-pull: export EXIST_VERSION := $(shell \
- curl -s -L https://bintray.com/existdb/releases/exist/_latestVersion  | \
- grep -oE 'eXist-db-setup-([0-9]+\.){2}([0-9]+)\.jar' | head -1 | grep -oE '([0-9]+\.){2}([0-9]+)' )
-pull:
-	@docker push $(DOCKER_IMAGE):$$EXIST_VERSION
+## 
+ifeq ($(INC),inc)
+include $(INC)/*.mk
+endif
 
 $(T)/eXist-latest.version:
 	@echo "## $@ ##"

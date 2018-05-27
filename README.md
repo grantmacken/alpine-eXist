@@ -8,6 +8,29 @@
 
 Built from openjdk:8-jre-alpine image [![](https://images.microbadger.com/badges/image/openjdk:8-jre-alpine.svg)](https://microbadger.com/images/openjdk:8-jre-alpine "Get your own image badge on microbadger.com")
 
+
+## Why Alpine
+
+ - [openjdk-roadmap-for-containers](https://blogs.oracle.com/developers/official-docker-image-for-oracle-java-and-the-openjdk-roadmap-for-containers)
+ - You are most likely already have alpine layers in your container stack
+
+## Generic Tagged Images
+
+- dev:  smaller for your desktop
+- prod: small- safer for your cloud host
+- latest: same as dev
+
+## for your desktop os
+ - grantmacken:alpine-eXist:latest
+ - grantmacken:alpine-eXist:dev        # the latest development build
+ - grantmacken:alpine-eXist:dev-v4.1.1  
+
+## for your cloud host
+ - grantmacken:alpine-eXist:prod        # latest production build
+ - grantmacken:alpine-eXist:prod-v4.1.1 # at eXist version 
+
+     # the latest development build
+
 ## Requirements
 *   [Docker](https://www.docker.com)
 
@@ -165,3 +188,80 @@ To modify -Xmx and CACHE_MEMORY configurations for your exist instance, change `
 cd alpine-eXist
 docker build .
 ```
+
+### Build Preamble
+
+1. beginning layers: alpine + openjdk:8-jre 
+2. intermediate layer tagged as base:  eXist install
+3. layers used-for: 
+ - for desktop: tagged dev
+ - for cloud:   tagged prod
+4. image as packaged application layer. e.g.
+ - for fop
+
+```
+make build INC=inc
+```
+
+I can get the image slimmer, by removing install artifacts not
+required for running eXist
+e.g. Alpine does not have bash so the eXist /bin' dir be removed , the
+installer dir etc.
+
+We start from the openjdk:8-jre-alpine image. On top of this layer, 
+we install eXist from the latest install binary provided by the eXist developers.
+
+Our first tagged base image is the openjdk jre + eXist.
+e strip a few thing out of the install, but it should provide a similar
+experience as if the user installed eXist from the install binary.
+
+From this base, the next stage is to get the image smaller to suit specific requirements.
+
+# TODO below
+
+## generic desktop development images 
+ - keep tests env
+ - keep logging env
+ - remove any network services not required
+ - remove unused modules ( check conf.xml , extensions/build.properties )
+
+```
+make build-dev INC=inc
+```
+ - alpine-eXist:dev  # the latest version
+ - alpine-eXist:dev-v4.1.1  
+
+## generic cloud production images
+ - remove test env
+ - remove any network services not required
+ - remove unused modules
+ - remove autodeploy folder
+ - remove any expath packages not required
+   - eXide
+   - dashboard
+   - shared
+
+```
+make build-dev INC=inc
+```
+ - alpine-eXist:prod  # the latest version
+ - alpine-eXist:prod-v4.1.1  
+
+## specfic development and production images
+
+These to have their own Dockerfile
+The images will be layered on top of the 
+generic development and production images
+
+example: image with FO support
+
+ ```
+make build-dev-fop
+make build-prod-fop
+```
+
+ - alpine-eXist:prod-fop  # the latest version
+ - alpine-eXist:prod-fop-v4.1.1  
+
+
+
