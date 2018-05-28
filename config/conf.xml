@@ -776,6 +776,7 @@
             enable-query-rewriting="yes" backwardCompatible="no" 
             enforce-index-use="always"
             raise-error-on-failed-retrieval="no">
+        
         <builtin-modules>
             <!-- 
                 Modularized Indexes 
@@ -788,6 +789,7 @@
             <!--
             <module uri="http://exist-db.org/xquery/spatial" class="org.exist.xquery.modules.spatial.SpatialModule" />
             -->
+            
             <!-- 
                 Default Modules 
             -->
@@ -801,10 +803,12 @@
             <module uri="http://exist-db.org/xquery/session"    class="org.exist.xquery.functions.session.SessionModule" />
             <module uri="http://exist-db.org/xquery/system"     class="org.exist.xquery.functions.system.SystemModule" />
             <module uri="http://exist-db.org/xquery/transform"  class="org.exist.xquery.functions.transform.TransformModule" />
+            
             <module uri="http://exist-db.org/xquery/util"       class="org.exist.xquery.functions.util.UtilModule">
                 <!-- set to true to disable the util:eval functions -->
                 <parameter name="evalDisabled" value="false"/>
             </module>
+            
             <module uri="http://exist-db.org/xquery/validation" class="org.exist.xquery.functions.validation.ValidationModule" />
             <module uri="http://exist-db.org/xquery/xmldb"      class="org.exist.xquery.functions.xmldb.XMLDBModule" />
 
@@ -812,6 +816,7 @@
             <module uri="http://www.w3.org/2005/xpath-functions/math" class="org.exist.xquery.functions.math.MathModule" />
             <module uri="http://www.w3.org/2005/xpath-functions/array" class="org.exist.xquery.functions.array.ArrayModule" />
             <module uri="http://exist-db.org/xquery/process" class="org.exist.xquery.modules.process.ProcessModule"/>
+            
 
             <!-- 
                 EXPath Modules 
@@ -834,8 +839,11 @@
             <!-- RESTXQ -->
             <module uri="http://exquery.org/ns/restxq" class="org.exist.extensions.exquery.restxq.impl.xquery.RestXqModule"/>
             <module uri="http://exquery.org/ns/restxq/exist" class="org.exist.extensions.exquery.restxq.impl.xquery.exist.ExistRestXqModule"/>
+            
             <!-- Request Module -->           
             <module uri="http://exquery.org/ns/request" class="org.exist.extensions.exquery.modules.request.RequestModule"/>
+            
+            
             <!-- 
                 Modules written in XQuery
                 resource: loads module from classpath (jar files)
@@ -861,12 +869,17 @@
                     - edit extensions/local.build.properties
                     - build modules with "./build.sh extension-modules"
             -->
+            
             <!-- Safe to use, function to be used by DBA only  -->
             <module uri="http://exist-db.org/xquery/file" class="org.exist.xquery.modules.file.FileModule" />
+            
             <!-- Compression module-->
             <module uri="http://exist-db.org/xquery/compression" class="org.exist.xquery.modules.compression.CompressionModule" />
+            
             <!-- XQDoc module: required for generating function documentation -->
             <module uri="http://exist-db.org/xquery/xqdoc" class="org.exist.xqdoc.xquery.XQDocModule" />
+
+            
             <!-- Modules to be enabled when building the distribution -->
             <module uri="http://exist-db.org/xquery/contentextraction"  class="org.exist.contentextraction.xquery.ContentExtractionModule" />
             <module uri="http://exist-db.org/xquery/counter"            class="org.exist.xquery.modules.counter.CounterModule" />

@@ -1,9 +1,4 @@
 
-
-
-extractConfigs:
-	docker cp ex:$(EXIST_HOME)/webapp/WEB-INF/controller-config.xml ./config
-
 build: export EXIST_VERSION := $(shell \
  curl -s -L https://bintray.com/existdb/releases/exist/_latestVersion  | \
  grep -oE 'eXist-db-setup-([0-9]+\.){2}([0-9]+)\.jar' | head -1 | grep -oE '([0-9]+\.){2}([0-9]+)' )
