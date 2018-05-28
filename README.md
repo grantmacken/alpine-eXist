@@ -176,10 +176,10 @@ docker build .
 1. beginning layers: alpine + openjdk:8-jre 
 2. intermediate layer tagged as base:  eXist install
 3. layers used-for: 
- - for desktop: tagged dev
- - for cloud:   tagged prod
+  - for desktop: tagged dev
+  - for cloud:   tagged prod
 4. image as packaged application layer. e.g.
- - for fop
+  - for fop
 
 ```
 make build INC=inc
@@ -194,7 +194,7 @@ We start from the openjdk:8-jre-alpine image. On top of this layer,
 we install eXist from the latest install binary provided by the eXist developers.
 
 Our first tagged base image is the openjdk jre + eXist.
-e strip a few thing out of the install, but it should provide a similar
+We strip a few thing out of the install, but it should provide a similar
 experience as if the user installed eXist from the install binary.
 
 From this base, the next stage is to get the image smaller to suit specific requirements.
@@ -224,7 +224,7 @@ make build-dev INC=inc
    - shared
 
 ```
-make build-dev INC=inc
+make build-prod INC=inc
 ```
  - alpine-eXist:prod  # the latest version
  - alpine-eXist:prod-v4.1.1  
