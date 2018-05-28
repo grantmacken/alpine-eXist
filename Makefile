@@ -60,7 +60,7 @@ $(T)/wget-eXist.log:  $(T)/eXist-latest.version
 	@echo "## $(notdir $@) ##"
 	@echo 'TASK: use wget to fetch $$(cat $<)'
 	@wget -o $@ -O "$(T)/$$(cat $<)" \
- --trust-server-name --server-response --quiet --no-clobber \
+ --trust-server-name --server-response --quiet  --show-progress  --progress=bar:force:noscroll --no-clobber \
  "https://bintray.com/artifact/download/existdb/releases/$$(cat $<)"
 	@echo '------------------------------------'
 
