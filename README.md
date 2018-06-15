@@ -20,14 +20,16 @@ Built from openjdk:8-jre-alpine image [![](https://images.microbadger.com/badges
 Pre-build images are available on [dockerhub](https://hub.docker.com/r/grantmacken/alpine-exist/)
 
 The latest build will always be the latest eXist release.
-Earlier versions may be available.
-
-You can simply download them and run the image as usual, e.g.:
 
 ```
 docker pull grantmacken/alpine-exist:latest
 docker run -p 8080:8080 grantmacken/alpine-exist:latest -d
 ```
+
+Earlier tagged 
+[tagged images](https://hub.docker.com/r/grantmacken/alpine-exist/tags)
+images based on earlier eXist versions may be available
+
 
 ### Local Development with docker-compose
 

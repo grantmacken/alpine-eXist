@@ -4,22 +4,7 @@ T := tmp
 
 default: $(T)/eXist-expect.log
 	@echo ' remove install artifacts'
-	@rm -f \
- $(EXIST_HOME)/uninstall.jar \
- $(EXIST_HOME)/.installationinformation \
- $(EXIST_HOME)/*.tmpl \
- $(EXIST_HOME)/*.log \
- $(EXIST_HOME)/*.xq \
- $(EXIST_HOME)/*.sh \
- $(EXIST_HOME)/icon.* \
- $(EXIST_HOME)/*.html \
- $(EXIST_HOME)/examples.jar \
- $(EXIST_HOME)/atom-services.xml \
- $(EXIST_HOME)/build.xml \
- $(EXIST_HOME)/build.properties \
- $(EXIST_HOME)/webapp/WEB-INF/*.tmpl \
- $(EXIST_HOME)/tools/jetty/etc/standalone-* \
- && rm -fr \
+	rm -fr \
  $(EXIST_HOME)/bin \
  $(EXIST_HOME)/build \
  $(EXIST_HOME)/installer \
@@ -37,11 +22,29 @@ default: $(T)/eXist-expect.log
  $(EXIST_HOME)/extensions/security \
  $(EXIST_HOME)/extensions/tomcat-realm \
  $(EXIST_HOME)/extensions/xprocxq \
+ $(EXIST_HOME)/tools/jetty/webapps/portal \
  $(EXIST_HOME)/tools/jetty/standalone-webapps \
  $(EXIST_HOME)/tools/jetty/etc/standalone
+	@rm -f \
+ $(EXIST_HOME)/lib/extensions/xprocxq.jar \
+ $(EXIST_HOME)/lib/extensions/exist-security-* \
+ $(EXIST_HOME)/lib/extensions/exiftool.jar \
+ $(EXIST_HOME)/uninstall.jar \
+ $(EXIST_HOME)/.installationinformation \
+ $(EXIST_HOME)/*.tmpl \
+ $(EXIST_HOME)/*.log \
+ $(EXIST_HOME)/*.xq \
+ $(EXIST_HOME)/*.sh \
+ $(EXIST_HOME)/icon.* \
+ $(EXIST_HOME)/*.html \
+ $(EXIST_HOME)/examples.jar \
+ $(EXIST_HOME)/atom-services.xml \
+ $(EXIST_HOME)/build.xml \
+ $(EXIST_HOME)/build.properties \
+ $(EXIST_HOME)/webapp/WEB-INF/*.tmpl \
+ $(EXIST_HOME)/tools/jetty/etc/standalone* \
 	@echo ' FIN '
 
-## 
 ifeq ($(INC),inc)
 include $(INC)/*.mk
 endif
@@ -64,7 +67,6 @@ $(T)/wget-eXist.log:  $(T)/eXist-latest.version
  "https://bintray.com/artifact/download/existdb/releases/$$(cat $<)"
 	@echo '------------------------------------'
 
-# --show-progress
 
 $(T)/eXist.expect: $(T)/wget-eXist.log
 	@echo "## $(notdir $@) ##"
