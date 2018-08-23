@@ -1,6 +1,13 @@
 
+####
+# TODO 
+# temp fix until actual release
+#  version hardwire
+# @#curl -s -L https://bintray.com/existdb/releases/exist/_latestVersion	  | \
+# 
+
 build: export EXIST_VERSION := $(shell \
- curl -s -L https://bintray.com/existdb/releases/exist/_latestVersion  | \
+ curl -s -L https://bintray.com/existdb/releases/exist/4.3.1  | \
  grep -oE 'eXist-db-setup-([0-9]+\.){2}([0-9]+)\.jar' | head -1 | grep -oE '([0-9]+\.){2}([0-9]+)' )
 build:
 	@echo "## $@ ##"
@@ -10,9 +17,12 @@ build:
  --tag="$(DOCKER_IMAGE):base-$$EXIST_VERSION" \
  --tag="$(DOCKER_IMAGE):latest" .
 
+
+
 build-dev: export EXIST_VERSION := $(shell \
- curl -s -L https://bintray.com/existdb/releases/exist/_latestVersion  | \
- grep -oE 'eXist-db-setup-([0-9]+\.){2}([0-9]+)\.jar' | head -1 | grep -oE '([0-9]+\.){2}([0-9]+)' )
+ curl -s -L https://bintray.com/existdb/releases/exist/4.3.1 | \
+ grep -oE 'eXist-db-setup-([0-9]+\.){2}([0-9]+)\.jar' | \
+ head -1 | grep -oE '([0-9]+\.){2}([0-9]+)' )
 build-dev:
 	@echo "## $@ ##"
 	@echo 'TASK: build the docker image'

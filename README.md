@@ -204,6 +204,7 @@ From this base, the next stage is to get the image smaller to suit specific requ
 
 ```
 make build-dev INC=inc
+make push INC=inc
 ```
  - alpine-eXist:dev  # the latest version
  - alpine-eXist:dev-v4.1.1  

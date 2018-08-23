@@ -24,10 +24,9 @@ RUN apk add --no-cache --virtual .build-deps \
         wget \
         perl \
         expect \
-        && make -j$(grep ^proces /proc/cpuinfo | wc -l) \
+        && make \
         && rm -rf tmp \
         && apk del .build-deps
-
 
 FROM openjdk:8-jre-alpine as base
 COPY --from=packager /usr/local/eXist /usr/local/eXist
