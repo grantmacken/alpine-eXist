@@ -9,6 +9,8 @@ before_install: mkdir -p tmp
 install: make tmp/eXist-latest.version
 script:
   - export DOCKER_TAG=base-v$(cat tmp/eXist-latest.version)
+  - echo "${DOCKER_TAG}"
+
 
 # - echo "${DOCKER_TAG}"
 # - docker build --tag  "grantmacken/alpine-exist:${DOCKER_TAG}" .

@@ -1,5 +1,14 @@
-# alpine-eXist
+# [alpine-eXist](https://github.com/grantmacken/alpine-eXist)
+
 [WIP] minimal docker image for exist-db
+
+Available on [dockerhub](https://hub.docker.com/r/grantmacken/alpine-exist)
+
+```
+docker pull grantmacken/alpine-exist:latest
+```
+
+Test build on [travis-ci](https://travis-ci.org/grantmacken/alpine-eXist)
 
 [![Build Status](https://travis-ci.org/grantmacken/alpine-eXist.svg?branch=master)](https://travis-ci.org/grantmacken/alpine-eXist)
 ![GitHub last commit](https://img.shields.io/github/last-commit/grantmacken/alpine-eXist.svg)
