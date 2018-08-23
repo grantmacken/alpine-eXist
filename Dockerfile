@@ -1,4 +1,4 @@
-FROM openjdk:8-jre-alpine:latest as packager
+FROM openjdk:8-jre-alpine as packager
 # exposes java in $PATH
 # and following ENV
 # JAVA_HOME
@@ -27,7 +27,7 @@ RUN apk add --no-cache --virtual .build-deps \
         && rm -rf tmp \
         && apk del .build-deps
 
-FROM openjdk:8-jre-alpine:latest as base
+FROM openjdk:8-jre-alpine as base
 COPY --from=packager /usr/local/eXist /usr/local/eXist
 
 # RUN rm -vf \
