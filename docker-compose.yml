@@ -1,20 +1,27 @@
 version: '3.4'
 services:
   exist:
-    image: ${DOCKER_IMAGE}:latest
-    container_name: ex
+    image: $DOCKER_IMAGE:$DOCKER_TAG
+    container_name: exist
     ports:
         - 8080:8080
+        - 8443:8443
     networks:
       - www
     volumes:
       - type: volume
         source: data
         target: ${EXIST_HOME}/${EXIST_DATA_DIR}
+      - type: volume
+        source: config
+        target: ${EXIST_HOME}/${EXIST_CONFIG_DIR}
 volumes:
   data:
     driver: local
-    name: data
+    name: exist-data
+  config:
+    driver: local
+    name: exist-config
 
 networks:
   www:
