@@ -53,11 +53,9 @@ $(T)/eXist-latest.version:
 	@echo "## $@ ##"
 	@mkdir -p $(@D)
 	@echo 'TASK: use curl to fetch the latest eXist version'
-	@#TODO replace with after RC curl -s -L https://bintray.com/existdb/releases/exist/_latestVersion
-	@echo $(strip  \
- $(shell \
- curl -s -L https://bintray.com/existdb/releases/exist/4.3.1  | \
- grep -oE 'eXist-db-setup-([0-9]+\.){2}([0-9]+)\.jar' | head -1) ) > $(@)
+	curl --silent "https://api.github.com/repos/eXist-db/exist/releases" | \
+  grep -oP '"tag_name": "eXist-\K(\d+.\d+)?(.\d)(?=")' | \
+  head -1  > $(@)
 	@echo '------------------------------------'
 
 $(T)/wget-eXist.log:  $(T)/eXist-latest.version
