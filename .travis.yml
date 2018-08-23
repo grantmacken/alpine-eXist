@@ -10,6 +10,8 @@ script:
   - mkdir -p tmp
   - make tmp/eXist-latest.version
   - export DOCKER_TAG=base-v$(cat tmp/eXist-latest.version | grep -oE '([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)')
+  - echo "${DOCKER_TAG}"
+  - docker build --tag  "grantmacken/alpine-exist:${DOCKER_TAG}"
 # - docker build --pull --cache-from "$IMAGE" --tag "$IMAGE" .
 # - docker run --name ex --publish 8080:8080 -d $IMAGE
 # - docker ps
