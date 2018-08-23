@@ -10,6 +10,8 @@ docker pull grantmacken/alpine-exist:latest
 
 Test build on [travis-ci](https://travis-ci.org/grantmacken/alpine-eXist)
 
+docker cloud [builds](https://cloud.docker.com/swarm/grantmacken/repository/docker/grantmacken/alpine-exist/builds)
+
 [![Build Status](https://travis-ci.org/grantmacken/alpine-eXist.svg?branch=master)](https://travis-ci.org/grantmacken/alpine-eXist)
 ![GitHub last commit](https://img.shields.io/github/last-commit/grantmacken/alpine-eXist.svg)
 [![](https://images.microbadger.com/badges/image/grantmacken/alpine-exist.svg)](https://microbadger.com/images/grantmacken/alpine-exist "Get your own image badge on microbadger.com")
