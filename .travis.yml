@@ -5,8 +5,9 @@ language: c
 services:
   - docker
 env:
-  - VERSION=4.3.1
-  - DOCKER_TAG=4.3.1
+  global:
+    - VERSION=4.3.1
+    - DOCKER_TAG=4.3.1
 install: skip
 script:
   - docker build --tag grantmacken/alpine-exist:${DOCKER_TAG} --build-arg VERSION=${VERSION} .
