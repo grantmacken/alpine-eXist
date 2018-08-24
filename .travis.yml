@@ -7,10 +7,9 @@ services:
 env:
   global:
     - VERSION=4.3.1
-    - DOCKER_TAG=4.3.1
+    - DOCKER_TAG=v4.3.1
 install: skip
 script:
-  - docker build --tag grantmacken/alpine-exist:${DOCKER_TAG} --build-arg VERSION=${VERSION} .
   - docker-compose up -d
   - docker ps
   - N=0;until curl -I -s -f 'http://127.0.0.1:8080/' | grep 'Jetty' || [ $N -eq 20 ]; do sleep $(( N++ )); done
@@ -18,4 +17,5 @@ script:
   - docker-compose down
 
 
+  # - docker build --tag grantmacken/alpine-exist:v${DOCKER_TAG} --build-arg VERSION=${VERSION} .
 
