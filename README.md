@@ -10,14 +10,10 @@ docker pull grantmacken/alpine-exist:latest
 
 Test build on [travis-ci](https://travis-ci.org/grantmacken/alpine-eXist)
 
-docker cloud [builds](https://cloud.docker.com/swarm/grantmacken/repository/docker/grantmacken/alpine-exist/builds)
+Docker cloud [builds](https://cloud.docker.com/swarm/grantmacken/repository/docker/grantmacken/alpine-exist/builds)
 
 [![Build Status](https://travis-ci.org/grantmacken/alpine-eXist.svg?branch=master)](https://travis-ci.org/grantmacken/alpine-eXist)
 ![GitHub last commit](https://img.shields.io/github/last-commit/grantmacken/alpine-eXist.svg)
-[![](https://images.microbadger.com/badges/image/grantmacken/alpine-exist.svg)](https://microbadger.com/images/grantmacken/alpine-exist "Get your own image badge on microbadger.com")
-[![](https://images.microbadger.com/badges/version/grantmacken/alpine-exist.svg)](https://microbadger.com/images/grantmacken/alpine-exist "Get your own version badge on microbadger.com")
-
-Built from openjdk:8-jre-alpine image [![](https://images.microbadger.com/badges/image/openjdk:8-jre-alpine.svg)](https://microbadger.com/images/openjdk:8-jre-alpine "Get your own image badge on microbadger.com")
 
 ## Why Alpine
 
@@ -62,9 +58,8 @@ will now be available on localhost port 8080
 
 #### Caveat
 
-The eXist dba user is the default `admin`.
-
-There is no password so change it ASAP
+The eXist dba `user` is the default `admin`.
+User password is also admin so change it ASAP
 
 You may do this via the eXist
 [usermanager](http://localhost:8080/exist/apps/usermanager/index.html)
@@ -127,7 +122,6 @@ location @proxy {
 2. the following ENV vars
     * JAVA_HOME
     * EXIST_HOME
-    * JAVA_ALPINE_VERSION
 3.  the working directory is located in root directory of the eXist installation.
 
 ## Talking To eXist
@@ -177,82 +171,14 @@ the name 'ex' is defined in `docker-compose.yml`
 Clone or Fork this repo.
 
 ### Memory config
-To modify -Xmx and CACHE_MEMORY configurations for your exist instance, change `MAX_MEM` and `CACHE_MEM` in `.env` and then build your image in the usual fashion:
+To modify -Xmx and CACHE_MEMORY configurations for your exist instance, 
+change `MAX_MEM` and `CACHE_MEM` in `.env` and then build your image in the usual fashion:
 
 ```
 cd alpine-eXist
 docker build .
 ```
 
-### Build Preamble
-
-1. beginning layers: alpine + openjdk:8-jre 
-2. intermediate layer tagged as base.  This is the base eXist install
-3. layers used-for: 
- - for desktop: tagged dev  
- - for cloud:   tagged prod  
-4. image as packaged application layer. e.g.
- - for fop apps 
-
-```
-make build INC=inc
-```
-We start from the openjdk:8-jre-alpine image. On top of this layer, 
-we install eXist from the latest install binary provided by the eXist developers.
-
-Our first tagged *base* image is the openjdk jre + eXist with a  few things stripped out of the eXist install.
-It should provide a similar experience as if the user installed eXist from the install binary.
-
-From this base, the next stage is to get the image smaller to suit specific requirements.
-
-# WIP below
-
-## generic desktop development images 
- - keep tests env
- - keep logging env
- - remove any network services not required
- - remove unused modules ( check conf.xml , extensions/build.properties )
-
-```
-make build-dev INC=inc
-make push INC=inc
-```
- - alpine-eXist:dev  # the latest version
- - alpine-eXist:dev-v4.1.1  
-
-# TODO below
-
-## generic cloud production images
- - remove test env
- - remove any network services not required
- - remove unused modules
- - remove autodeploy folder
- - remove any expath packages not required
-   - eXide
-   - dashboard
-   - shared
-
-```
-make build-prod INC=inc
-```
- - alpine-eXist:prod  # the latest version
- - alpine-eXist:prod-v4.1.1  
-
-## specfic development and production images
-
-These to have their own Dockerfile
-The images will be layered on top of the 
-generic development and production images
-
-example: image with FO support
-
- ```
-make build-dev-fop
-make build-prod-fop
-```
-
- - alpine-eXist:prod-fop  # the latest version
- - alpine-eXist:prod-fop-v4.1.1  
 
 
 
