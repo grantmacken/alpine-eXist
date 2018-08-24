@@ -7,20 +7,14 @@ services:
 
 install: skip
 script:
-  - curl --silent "https://api.github.com/repos/eXist-db/exist/releases" | grep -E 'tag_name'
-  - curl --silent "https://api.github.com/repos/eXist-db/exist/releases" | grep -oP 'tag_name\K(.+)'
-  - mkdir -p tmp
-  - make tmp/eXist-latest.version
-  - export DOCKER_TAG=$(cat tmp/eXist-latest.version)
-  - echo "${DOCKER_TAG}"
-
+  - make build
+  - docker-compose up -d
+  - docker ps -a | grep 'exist'
+  - docker logs ex
+  - docker-compose down
 
 # - echo "${DOCKER_TAG}"
 # - docker build --tag  "grantmacken/alpine-exist:${DOCKER_TAG}" .
-# - docker-compose up -d
-# - docker ps -a | grep 'exist'
-# - docker logs ex
-# - docker-compose down
 
 # before_deploy:
 #   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
