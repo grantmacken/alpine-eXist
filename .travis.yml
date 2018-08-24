@@ -11,17 +11,10 @@ install: skip
 script:
   - docker build --tag  "grantmacken/alpine-exist:${DOCKER_TAG}" --build-arg "VERSION=${VERSION}" .
   - docker-compose up -d
-  - docker ps -a | grep 'exist'
+  - docker ps
+  - N=0;until curl -I -s -f 'http://127.0.0.1:8080/' | grep 'Jetty' || [ $N -eq 20 ]; do sleep $(( N++ )); done
   - docker logs ex
   - docker-compose down
 
-# - echo "${DOCKER_TAG}"
-# - docker build --tag  "grantmacken/alpine-exist:${DOCKER_TAG}" .
 
-# before_deploy:
-#   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-# deploy:
-#   provider: script
-#   script: echo "${DOCKER_TAG}"
-#   on:
-#     branch: master
+
