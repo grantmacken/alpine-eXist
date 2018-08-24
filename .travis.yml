@@ -4,10 +4,12 @@ os: linux
 language: c
 services:
   - docker
-
+env:
+  - VERSION=4.3.1
+  - DOCKER_TAG=4.3.1
 install: skip
 script:
-  - make build
+  - docker build --tag  "grantmacken/alpine-exist:${DOCKER_TAG}" --build-arg "VERSION=${VERSION}" .
   - docker-compose up -d
   - docker ps -a | grep 'exist'
   - docker logs ex
