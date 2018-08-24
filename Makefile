@@ -11,6 +11,7 @@ build:
 	@echo 'TASK: build the docker image '
 	@echo "latest ver: $(DOCKER_IMAGE)$(colon)$(VERSION)"
 	@docker build \
+ --build-arg "VERSION=$(VERSION)" \
  --tag="$(DOCKER_IMAGE)$(colon)v$(VERSION)" \
  --tag="$(DOCKER_IMAGE)$(colon)$(DOCKER_TAG)" \
  .
@@ -18,3 +19,11 @@ build:
 push:
 	@docker push $(DOCKER_IMAGE)$(colon)v$(VERSION)
 	@docker push $(DOCKER_IMAGE)$(colon)$(DOCKER_TAG)
+
+
+up:
+	@docker-compose up -d
+
+
+log:
+	@docker logs ex
