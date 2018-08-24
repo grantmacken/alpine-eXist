@@ -3,6 +3,7 @@ FROM grantmacken/alpine-base:maker as packager
 # and following ENV
 # JAVA_HOME
 
+ARG VERSION=4.3.1
 LABEL maintainer="Grant Mackenzie <grantmacken@gmail.com>" \
       org.label-schema.build-date="$(date --iso)" \
       org.label-schema.vcs-ref="$(git rev-parse --short HEAD)" \
@@ -10,20 +11,16 @@ LABEL maintainer="Grant Mackenzie <grantmacken@gmail.com>" \
       org.label-schema.schema-version="1.0"
 
 WORKDIR /home
-
-RUN export VERSION=$(curl -s "https://api.github.com/repos/eXist-db/exist/releases" | \
- grep -oP "tag_name(.+)eXist-\K([0-9]+\.){2}([0-9]+)(?=\")" | head -1 ) \
- && wget -O eXist-db-setup.jar \
- --trust-server-name --quiet  --show-progress  --progress=bar:force:noscroll --no-clobber \
- "https://bintray.com/artifact/download/existdb/releases/eXist-db-setup-${VERSION}.jar"
-
 COPY .env .env
 COPY eXist.expect eXist.expect
-RUN export $(xargs <.env) \
- && chmod +x eXist.expect \
- && ./eXist.expect
 
-RUN rm -fr \
+RUN wget -O eXist-db-setup.jar \
+ --trust-server-name --quiet  --show-progress  --progress=bar:force:noscroll --no-clobber \
+ "https://bintray.com/artifact/download/existdb/releases/eXist-db-setup-${VERSION}.jar" \
+ && export $(xargs <.env) \
+ && chmod +x eXist.expect \
+ && ./eXist.expect \
+ && rm -fr \
  /usr/local/eXist/bin \
  /usr/local/eXist/build \
  /usr/local/eXist/extensions/debuggee \
