@@ -1,96 +1,20 @@
 include .env
 
-T := tmp
+colon := :
+$(colon) := :
 
-default: $(T)/eXist-expect.log
-	@echo ' remove install artifacts'
-	rm -fr \
- $(EXIST_HOME)/bin \
- $(EXIST_HOME)/build \
- $(EXIST_HOME)/installer \
- $(EXIST_HOME)/samples \
- $(EXIST_HOME)/src \
- $(EXIST_HOME)/test \
- $(EXIST_HOME)/tools/Solaris \
- $(EXIST_HOME)/tools/appbundler \
- $(EXIST_HOME)/tools/rulesets \
- $(EXIST_HOME)/tools/yajsw \
- $(EXIST_HOME)/extensions/debuggee \
- $(EXIST_HOME)/extensions/exiftool \
- $(EXIST_HOME)/extensions/metadata \
- $(EXIST_HOME)/extensions/netedit \
- $(EXIST_HOME)/extensions/security \
- $(EXIST_HOME)/extensions/tomcat-realm \
- $(EXIST_HOME)/extensions/xprocxq \
- $(EXIST_HOME)/tools/jetty/webapps/portal \
- $(EXIST_HOME)/tools/jetty/standalone-webapps \
- $(EXIST_HOME)/tools/jetty/etc/standalone
-	@rm -f \
- $(EXIST_HOME)/lib/extensions/xprocxq.jar \
- $(EXIST_HOME)/lib/extensions/exist-security-* \
- $(EXIST_HOME)/lib/extensions/exiftool.jar \
- $(EXIST_HOME)/uninstall.jar \
- $(EXIST_HOME)/.installationinformation \
- $(EXIST_HOME)/*.tmpl \
- $(EXIST_HOME)/*.log \
- $(EXIST_HOME)/*.xq \
- $(EXIST_HOME)/*.sh \
- $(EXIST_HOME)/icon.* \
- $(EXIST_HOME)/*.html \
- $(EXIST_HOME)/examples.jar \
- $(EXIST_HOME)/atom-services.xml \
- $(EXIST_HOME)/build.xml \
- $(EXIST_HOME)/build.properties \
- $(EXIST_HOME)/webapp/WEB-INF/*.tmpl \
- $(EXIST_HOME)/tools/jetty/etc/standalone* \
-	@echo ' FIN '
+VERSION != curl -s "https://api.github.com/repos/eXist-db/exist/releases" | \
+ grep -oP "tag_name(.+)eXist-\K([0-9]+\.){2}([0-9]+)(?=\")" | head -1
 
-ifeq ($(INC),inc)
-include $(INC)/*.mk
-endif
-
-$(T)/eXist-latest.version:
+build:
 	@echo "## $@ ##"
-	@mkdir -p $(@D)
-	@echo 'TASK: use curl to fetch the latest eXist version'
-	curl --silent "https://api.github.com/repos/eXist-db/exist/releases" | \
-  grep -oP '"tag_name": "eXist-\K(\d+.\d+)?(.\d)(?=")' | \
-  head -1  > $(@)
-	@echo '------------------------------------'
+	@echo 'TASK: build the docker image '
+	@echo "latest ver: $(DOCKER_IMAGE)$(colon)$(VERSION)"
+	@docker build \
+ --tag="$(DOCKER_IMAGE)$(colon)v$(VERSION)" \
+ --tag="$(DOCKER_IMAGE)$(colon)$(DOCKER_TAG)" \
+ .
 
-$(T)/wget-eXist.log:  $(T)/eXist-latest.version
-	@echo "## $(notdir $@) ##"
-	@echo 'TASK: use wget to fetch $$(cat $<)'
-	@wget -o $@ -O "$(T)/$$(cat $<)" \
- --trust-server-name --server-response --quiet  --show-progress  --progress=bar:force:noscroll --no-clobber \
- "https://bintray.com/artifact/download/existdb/releases/$$(cat $<)"
-	@echo '------------------------------------'
-
-
-$(T)/eXist.expect: $(T)/wget-eXist.log
-	@echo "## $(notdir $@) ##"
-	@echo 'TASK: creating expect file'
-	@echo '#!$(shell which expect) -f' > $(@)
-	@echo 'spawn java -jar $(T)/$(shell cat tmp/eXist-latest.version) -console' >> $(@)
-	@echo 'expect "Select target path" { send "$(EXIST_HOME)\n" }'  >> $(@)
-	@echo 'expect "*ress 1" { send "1\n" }'  >> $(@)
-	@echo 'expect "Set Data Directory" { send "$(EXIST_DATA_DIR)\n" }' >> $(@)
-	@echo 'expect "*ress 1" { send "1\n" }' >> $(@)
-	@echo 'expect "*ress 1" { send "1\n" }' >> $(@)
-	@echo 'expect "Enter password" { send "admin\n" }' >> $(@)
-	@echo 'expect "Enter password" { send "admin\n" }' >> $(@)
-	@echo 'expect "Maximum memory" { send "$(MAX_MEM)\n" }'  >> $(@)
-	@echo 'expect "Cache memory" { send "$(CACHE_MEM)\n" }'  >> $(@)
-	@echo 'expect "*ress 1" {send "1\n"}'  >> $(@)
-	@echo 'expect -timeout -1 "Console installation done" {' >> $(@)
-	@echo ' wait'  >> $(@)
-	@echo ' exit'  >> $(@)
-	@echo '}'  >> $(@)
-	@echo '---------------------------------------'
-
-$(T)/eXist-expect.log: $(T)/eXist.expect
-	@echo "## $(notdir $@) ##"
-	@echo "TASK: install eXist via expect script. Be Patient! this can take a few minutes"
-	@chmod +x $(<)
-	@$(<) | tee $(@)
-	@echo '---------------------------------------'
+push:
+	@docker push $(DOCKER_IMAGE)$(colon)v$(VERSION)
+	@docker push $(DOCKER_IMAGE)$(colon)$(DOCKER_TAG)
