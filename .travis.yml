@@ -4,10 +4,9 @@ os: linux
 language: c
 services:
   - docker
-
 jobs:
    include:
-     - stage: given ver string build image from VERSION build-arg
+     - stage: build
       env:
       - DOCKER_TAG=x4.3.1
       install: skip
