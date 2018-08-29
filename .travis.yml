@@ -6,7 +6,7 @@ services:
   - docker
 env:
   global:
-    - DOCKER_TAG=S( make tag )
+    - DOCKER_TAG=$( make tag )
   install: make build
 script:
   - docker-compose up -d
