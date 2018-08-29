@@ -11,11 +11,16 @@ services:
       - type: volume
         source: data
         target: ${EXIST_HOME}/${EXIST_DATA_DIR}
-
+      - type: volume
+        source: config
+        target: ${EXIST_HOME}/${EXIST_CONFIG_DIR}
 volumes:
   data:
     driver: local
-    name: data
+    name: exData
+  config:
+    driver: local
+    name: exConfig
 
 networks:
   www:

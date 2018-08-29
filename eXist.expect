@@ -1,6 +1,6 @@
 #!/usr/bin/expect -f
 spawn java -jar  eXist-db-setup.jar -console
-expect "Select target path" { send "$env(EXIST_HOME)\n" }
+expect "Select target path" { send "/home/eXist\n" }
 expect "*ress 1" { send "1\n" }
 expect "Set Data Directory" { send "$env(EXIST_DATA_DIR)\n" }
 expect "*ress 1" { send "1\n" }

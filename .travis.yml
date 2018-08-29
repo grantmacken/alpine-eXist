@@ -8,7 +8,7 @@ env:
   global:
     - VERSION=4.3.1
     - DOCKER_TAG=v4.3.1
-install: skip
+install: make build
 script:
   - docker-compose up -d
   - docker ps
