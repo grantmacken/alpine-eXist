@@ -9,8 +9,7 @@ jobs:
    include:
      - stage: build
        env:
-        - VERSION=4.3.1
-        - DOCKER_TAG=xxx
+        - DOCKER_TAG=v4.3.1
        install: skip
        script:
         - make tag
