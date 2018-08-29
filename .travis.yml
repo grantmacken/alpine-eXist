@@ -7,17 +7,18 @@ services:
 
 
 env:
-- DOCKER_TAG=v4.3.1
+  global:
+    - DOCKER_TAG=v4.3.1
+    - VERSION=4.3.1
 install: skip
 script:
-- make tag
-- make build
-- docker-compose up -d
-- docker ps -a | grep 'ex'
-- N=0;until curl -Isf http://127.0.0.1:8080/ | grep 'Jetty' || [ $N -eq 20 ]; do sleep $(( N++ )); done
-- curl -Is http://127.0.0.1:8080/ | grep 'Jetty'
-- docker logs ex | grep 'Server has started'
-- docker-compose down
+  - docker build --tag existdb/existdb:${DOCKER_TAG} --build-arg "VERSION=${VERSION}" .
+  - docker-compose up -d
+  - docker ps -a | grep 'ex'
+  - N=0;until curl -Isf http://127.0.0.1:8080/ | grep 'Jetty' || [ $N -eq 20 ]; do sleep $(( N++ )); done
+  - curl -Is http://127.0.0.1:8080/ | grep 'Jetty'
+  - docker logs ex | grep 'Server has started'
+  - docker-compose down
 # jobs:
 #    include:
 #      - stage: build

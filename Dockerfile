@@ -3,6 +3,7 @@ FROM  openjdk:8-jre-alpine3.8 as maker
 # and following ENV
 # JAVA_HOME
 ARG VERSION=4.3.1
+ENV VERSION=$VERSION
 LABEL maintainer="Grant Mackenzie <grantmacken@gmail.com>" \
       org.label-schema.build-date="$(date --iso)" \
       org.label-schema.vcs-ref="$(git rev-parse --short HEAD)" \
@@ -60,7 +61,7 @@ RUN rm -rv \
   'LICENSE' \
   'client.properties'; \
   do cp $i $EXIST_HOME; done\
-  && ls -al $EXIST_HOME \
+  && ls -al $EXIST_HOME \-
   && echo ' - copy base folders' \
   && cp -r autodeploy $EXIST_HOME \
   && echo ' - copy base libs' \
