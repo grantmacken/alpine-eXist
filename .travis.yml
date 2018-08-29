@@ -4,14 +4,19 @@ os: linux
 language: c
 services:
   - docker
-env:
-  global:
-    - DOCKER_TAG=dummy
-  install: make build
-script:
-  - docker-compose up -d
-  - docker ps -a | grep 'ex'
-  - N=0;until curl -Isf http://127.0.0.1:8080/ | grep 'Jetty' || [ $N -eq 20 ]; do sleep $(( N++ )); done
-  - curl -Is http://127.0.0.1:8080/ | grep 'Jetty'
-  - docker logs ex | grep 'Server has started'
-  - docker-compose down
+
+jobs:
+   include:
+     - stage: given ver string build image from VERSION build-arg
+      env:
+      - DOCKER_TAG=x4.3.1
+      install: skip
+      script:
+      - make tag
+      - make build
+      - docker-compose up -d
+      - docker ps -a | grep 'ex'
+      - N=0;until curl -Isf http://127.0.0.1:8080/ | grep 'Jetty' || [ $N -eq 20 ]; do sleep $(( N++ )); done
+      - curl -Is http://127.0.0.1:8080/ | grep 'Jetty'
+      - docker logs ex | grep 'Server has started'
+      - docker-compose down
