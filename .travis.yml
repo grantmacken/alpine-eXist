@@ -4,18 +4,26 @@ os: linux
 language: c
 services:
   - docker
+
 jobs:
    include:
      - stage: build
-      env:
-      - DOCKER_TAG=x4.3.1
-      install: skip
-      script:
-      - make tag
-      - make build
-      - docker-compose up -d
-      - docker ps -a | grep 'ex'
-      - N=0;until curl -Isf http://127.0.0.1:8080/ | grep 'Jetty' || [ $N -eq 20 ]; do sleep $(( N++ )); done
-      - curl -Is http://127.0.0.1:8080/ | grep 'Jetty'
-      - docker logs ex | grep 'Server has started'
-      - docker-compose down
+       env:
+        - VERSION=4.3.1
+        - DOCKER_TAG=xxx
+       install: skip
+       script:
+        - docker build --tag existdb/existdb:${VERSION} --build-arg "VERSION=${VERSION}" .
+        - docker-compose up -d
+        - docker ps -a | grep 'ex'
+        - N=0;until curl -Isf http://127.0.0.1:8080/ | grep 'Jetty' || [ $N -eq 20 ]; do sleep $(( N++ )); done
+        - curl -Is http://127.0.0.1:8080/ | grep 'Jetty'
+        - docker logs ex | grep 'Server has started'
+        - docker-compose down
+# jobs:
+#    include:
+#      - stage: build
+#         install: skip
+#         script:
+#         - make tag
+#         - make build
