@@ -18,6 +18,9 @@ build:
  --tag="$(DOCKER_IMAGE)$(colon)$(DOCKER_TAG)" \
  .
 
+tag:
+	@echo 'v$(VERSION)'
+
 build-base:
 	@echo "## $@ ##"
 	@echo 'TASK: build the docker image '
