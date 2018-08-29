@@ -6,13 +6,12 @@ services:
   - docker
 env:
   global:
-    - DOCKER_TAG=v4.3.1
-    - URL='http://127.0.0.1:8080/'
+    - DOCKER_TAG=dummy
   install: make build
 script:
   - docker-compose up -d
-  - docker ps -a | grep 'exist'
-  - N=0;until curl -Isf $URL | grep 'Jetty' || [ $N -eq 20 ]; do sleep $(( N++ )); done
-  - curl -Is $URL | grep 'Jetty'
-  - docker logs exist | grep 'Server has started'
+  - docker ps -a | grep 'ex'
+  - N=0;until curl -Isf http://127.0.0.1:8080/ | grep 'Jetty' || [ $N -eq 20 ]; do sleep $(( N++ )); done
+  - curl -Is http://127.0.0.1:8080/ | grep 'Jetty'
+  - docker logs ex | grep 'Server has started'
   - docker-compose down
