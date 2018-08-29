@@ -13,7 +13,8 @@ jobs:
         - DOCKER_TAG=xxx
        install: skip
        script:
-        - docker build --tag existdb/existdb:${VERSION} --build-arg "VERSION=${VERSION}" .
+        - make tag
+        - make build
         - docker-compose up -d
         - docker ps -a | grep 'ex'
         - N=0;until curl -Isf http://127.0.0.1:8080/ | grep 'Jetty' || [ $N -eq 20 ]; do sleep $(( N++ )); done
