@@ -6,15 +6,13 @@ services:
   - docker
 env:
   global:
-    - DOCKER_TAG=$( make tag )
+    - DOCKER_TAG=v4.3.1
+    - URL='http://127.0.0.1:8080/'
   install: make build
 script:
   - docker-compose up -d
-  - docker ps
-  - N=0;until curl -I -s -f 'http://127.0.0.1:8080/' | grep 'Jetty' || [ $N -eq 20 ]; do sleep $(( N++ )); done
-  - docker logs ex
+  - docker ps -a | grep 'exist'
+  - N=0;until curl -Isf $URL | grep 'Jetty' || [ $N -eq 20 ]; do sleep $(( N++ )); done
+  - curl -Is $URL | grep 'Jetty'
+  - docker logs exist | grep 'Server has started'
   - docker-compose down
-
-
-  # - docker build --tag grantmacken/alpine-exist:v${DOCKER_TAG} --build-arg VERSION=${VERSION} .
-
