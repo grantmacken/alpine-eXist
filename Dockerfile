@@ -61,7 +61,7 @@ RUN rm -rv \
   'LICENSE' \
   'client.properties'; \
   do cp $i $EXIST_HOME; done\
-  && ls -al $EXIST_HOME \-
+  && ls -al $EXIST_HOME \
   && echo ' - copy base folders' \
   && cp -r autodeploy $EXIST_HOME \
   && echo ' - copy base libs' \
