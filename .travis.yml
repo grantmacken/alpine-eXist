@@ -8,8 +8,8 @@ services:
 env:
   global:
     - DOCKER_IMAGE=grantmacken/alpine-exist
-    - DOCKER_TAG=v4.3.1
-    - VERSION=4.3.1
+    - DOCKER_TAG=v4.4.0
+    - VERSION=4.4.0
 install: skip
 script:
   - docker build --tag ${DOCKER_IMAGE}:${DOCKER_TAG} --build-arg "VERSION=${VERSION}" .
@@ -27,5 +27,3 @@ script:
   - docker cp ex:/usr/local/eXist/config/conf.xml ./tmp/conf.xml
   - docker cp ./tmp/conf.xml ex:/usr/local/eXist/config/conf.xml
   - docker-compose down
-docker exec ex java -jar start.jar client -q -u admin -P admin -x \
- 'sm:is-dba(xmldb:get-current-user())' | tail -1
