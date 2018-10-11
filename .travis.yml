@@ -18,11 +18,14 @@ script:
   - N=0;until curl -Isf http://127.0.0.1:8080/ | grep 'Jetty' || [ $N -eq 20 ]; do sleep $(( N++ )); done
   - curl -Is http://127.0.0.1:8080/ | grep 'Jetty'
   - docker logs ex | grep 'Server has started'
+  - docker exec ex java -jar start.jar client -q -x 'system:get-version()' | grep "$VERSION"
+  - docker exec ex java -jar start.jar client -q -x 'sm:passwd("admin", "nimda")'
+  - docker exec ex java -jar start.jar client -q -u admin -P nimda -x  'sm:is-dba(xmldb:get-current-user())' | grep 'true'
+  - docker exec ex java -jar start.jar client -q -u admin -P nimda -x  'string-join(repo:list(), "&#10;")' | grep 'dashboard'
+  - docker exec ls . | grep 'config'
+  - mkdir -p ./tmp
+  - docker cp ex:/usr/local/eXist/config/conf.xml ./tmp/conf.xml
+  - docker cp ./tmp/conf.xml ex:/usr/local/eXist/config/conf.xml
   - docker-compose down
-# jobs:
-#    include:
-#      - stage: build
-#         install: skip
-#         script:
-#         - make tag
-#         - make build
+docker exec ex java -jar start.jar client -q -u admin -P admin -x \
+ 'sm:is-dba(xmldb:get-current-user())' | tail -1
