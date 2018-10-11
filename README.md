@@ -10,8 +10,6 @@ docker pull grantmacken/alpine-exist:latest
 
 Test build on [travis-ci](https://travis-ci.org/grantmacken/alpine-eXist)
 
-Docker cloud [builds](https://cloud.docker.com/swarm/grantmacken/repository/docker/grantmacken/alpine-exist/builds)
-
 [![Build Status](https://travis-ci.org/grantmacken/alpine-eXist.svg?branch=master)](https://travis-ci.org/grantmacken/alpine-eXist)
 ![GitHub last commit](https://img.shields.io/github/last-commit/grantmacken/alpine-eXist.svg)
 
@@ -19,6 +17,11 @@ Docker cloud [builds](https://cloud.docker.com/swarm/grantmacken/repository/dock
 
  - [openjdk-roadmap-for-containers](https://blogs.oracle.com/developers/official-docker-image-for-oracle-java-and-the-openjdk-roadmap-for-containers)
  - You are most likely already have alpine layers in your container stack
+ - You might want minimal size image but also be able use shell commands (ls rm etc)
+
+If you don't want to use a shell commands, 
+a minimal offical eXist [distroless version is available](from https://github.com/eXist-db/docker-existdb) 
+
 
 ## Requirements
 *   [Docker](https://www.docker.com)
