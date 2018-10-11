@@ -82,8 +82,9 @@ The docker-compose run time environment includes
 2. A persistent docker volume named 'data' so the
 important stuff in `${EXIST_HOME}/${EXIST_DATA_DIR}`
 hangs around.
-3. A network named 'www'.
-4. A port published on 8080
+3. A docker volume named 'config' to allow you to make changes to eXist startup options
+4. A network named 'www'.
+5. A port published on 8080
 
 #### If docker-compose is not available
 
@@ -93,10 +94,12 @@ The equivalent docker commands to issue are
 ```
 docker network create --driver=bridge www
 docker volume create --driver=local data
+docker volume create --driver=local config
 docker run \
   --name ex \
   --network www \
   --volume data:/usr/local/eXist/webapp/WEB-INF/data \
+  --volume data:/usr/local/eXist/config \
   --publish 8080:8080 \
   -d \
   grantmacken/alpine-exist:latest'
