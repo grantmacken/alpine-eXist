@@ -15,9 +15,10 @@ WORKDIR /home
 COPY .env .env
 COPY eXist.expect eXist.expect
 
-RUN apk add --no-cache --virtual .build-deps expect \
+RUN echo "Build eXist version: ${VERSION}" \
  && wget -q -O eXist-db-setup.jar \
  https://bintray.com/artifact/download/existdb/releases/eXist-db-setup-${VERSION}.jar \
+  && apk add --no-cache --virtual .build-deps expect \
   && export $(xargs <.env) \
   && chmod +x eXist.expect \
   && ./eXist.expect \
