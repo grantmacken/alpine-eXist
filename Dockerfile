@@ -1,144 +1,67 @@
-FROM  openjdk:8-jre-alpine3.8 as maker
+FROM  openjdk:8-jre-alpine3.9 as maker
 # exposes java in $PATH
 # and following ENV
 # JAVA_HOME
-ARG VERSION=4.3.1
-ENV VERSION=$VERSION
-LABEL maintainer="Grant Mackenzie <grantmacken@gmail.com>" \
-      org.label-schema.build-date="$(date --iso)" \
-      org.label-schema.vcs-ref="$(git rev-parse --short HEAD)" \
-      org.label-schema.vcs-url="https://github.com/grantmacken/alpine-eXist" \
-      org.label-schema.schema-version="1.0"
+# ARG VERSION=4.3.1
+# ENV VERSION=$VERSION
+# LABEL maintainer="Grant Mackenzie <grantmacken@gmail.com>" \
+#       org.label-schema.build-date="$(date --iso)" \
+#       org.label-schema.vcs-ref="$(git rev-parse --short HEAD)" \
+#       org.label-schema.vcs-url="https://github.com/grantmacken/alpine-eXist" \
+#       org.label-schema.schema-version="1.0"
 
 WORKDIR /home
-
-COPY .env .env
-COPY eXist.expect eXist.expect
-
-RUN echo "Build eXist version: ${VERSION}" \
- && wget -q -O eXist-db-setup.jar \
- https://bintray.com/artifact/download/existdb/releases/eXist-db-setup-${VERSION}.jar \
-  && apk add --no-cache --virtual .build-deps expect \
-  && export $(xargs <.env) \
-  && chmod +x eXist.expect \
-  && ./eXist.expect \
-  && rm eXist-db-setup.jar \
-  && apk del .build-deps
-
 ENV EXIST_HOME  "/usr/local/eXist"
-WORKDIR /home/eXist
+ENV EXIST_DIST  "exist-distribution-5.0.0-RC8-SNAPSHOT"
+# COPY .env .env
+# COPY eXist.expect eXist.expect
 
-RUN rm -rv \
-  bin \
-  build \
-  extensions/debuggee \
-  extensions/exiftool \
-  extensions/metadata \
-  extensions/netedit \
-  extensions/security \
-  extensions/tomcat-realm \
-  extensions/xprocxq \
-  installer \
-  samples \
-  src \
-  test \
-  tools/Solaris \
-  tools/appbundler \
-  tools/jetty/etc/standalone \
-  tools/jetty/standalone-webapps \
-  tools/jetty/webapps/portal \
-  tools/rulesets \
-  tools/yajsw \
-  && rm -f \
-  lib/extensions/exiftool.jar \
-  lib/extensions/exist-security-* \
-  lib/extensions/xprocxq.jar \
-  tools/jetty/etc/standalone* \
-  webapp/WEB-INF/*.tmpl \
-  && echo ' - select only stuff required to run eXist' \
-  && mkdir -p $EXIST_HOME \
-  && echo ' - copy sundries' \
-  && for i in \
+RUN wget -q \
+ http://static.adamretter.org.uk/${EXIST_DIST}-unix.tar.bz2  -O - |  tar -xj \
+ && cd ${EXIST_DIST} \
+ &&  mkdir -v -p $EXIST_HOME/logs \
+ &&  mkdir -v -p $EXIST_HOME/autodeploy \
+ && for i in \
   'LICENSE' \
-  'client.properties'; \
-  do cp $i $EXIST_HOME; done\
-  && ls -al $EXIST_HOME \
-  && echo ' - copy base folders' \
-  && cp -r autodeploy $EXIST_HOME \
-  && echo ' - copy base libs' \
-  && for i in \
-  'exist-optional.jar'\
-  'exist.jar' \
-  'start.jar'; \
+  'README.md'; \
   do cp $i $EXIST_HOME; done \
-  && mkdir $EXIST_HOME/lib \
-  && for i in \
-  'lib/core' \
-  'lib/endorsed' \
-  'lib/extensions' \
-  'lib/optional' \
-  'lib/test' \
-  'lib/user'; \
-  do cp -r $i $EXIST_HOME/lib  ; done \
-  && echo ' - symlink root config files' \
-  && mkdir $EXIST_HOME/config \
-  && for i in \
-  'conf.xml'\
-  'descriptor.xml' \
-  'log4j2.xml' \
-  'mime-types.xml'; \
-  do mv $i $EXIST_HOME/config;\
-  ln -s -v -T $EXIST_HOME/config/$i $EXIST_HOME/$i; done \
-  && echo ' - copy tools' \
-  && mkdir $EXIST_HOME/tools \
-  && for i in \
-  'tools/ant' \
-  'tools/aspectj' \
-  'tools/jetty'; \
-  do cp -r $i $EXIST_HOME/tools; done \
-  && echo ' - copy extension libs' \
-  && mkdir -p $EXIST_HOME/extensions/exquery/restxq \
-  && mkdir -p $EXIST_HOME/extensions/betterform/main \
-  && mkdir -p $EXIST_HOME/extensions/contentextraction \
-  && mkdir -p $EXIST_HOME/extensions/expath \
-  && mkdir -p $EXIST_HOME/extensions/indexes/lucene \
-  && mkdir -p $EXIST_HOME/extensions/modules \
-  && mkdir -p $EXIST_HOME/extensions/webdav \
-  && mkdir -p $EXIST_HOME/extensions/xqdoc \
-  && cp -r extensions/betterform/main/lib $EXIST_HOME/extensions/betterform/main \
-  && cp -r extensions/contentextraction/lib $EXIST_HOME/extensions/contentextraction \
-  && cp -r extensions/expath/lib $EXIST_HOME/extensions/expath \
-  && cp -r extensions/exquery/lib $EXIST_HOME/extensions/exquery \
-  && cp -r extensions/exquery/restxq/lib $EXIST_HOME/extensions/exquery/restxq \
-  && cp -r extensions/indexes/lucene/lib $EXIST_HOME/extensions/indexes/lucene \
-  && cp -r extensions/modules/lib  $EXIST_HOME/extensions/modules \
-  && cp -r extensions/webdav/lib $EXIST_HOME/extensions/webdav \
-  && cp -r extensions/xqdoc/lib $EXIST_HOME/extensions/xqdoc \
-  && echo ' - copy webapp' \
-  && cp -r webapp  $EXIST_HOME \
-  && echo ' - move and symlink webapp config files' \
-  && mv $EXIST_HOME/tools/jetty/webapps/exist-webapp-context.xml $EXIST_HOME/config \
-  && ln -s -v -T \
-  $EXIST_HOME/config/exist-webapp-context.xml \
-  $EXIST_HOME/tools/jetty/webapps/exist-webapp-context.xml \
-  && echo 'move and symlink jetty config files' \
-  && mv $EXIST_HOME/webapp/WEB-INF/controller-config.xml $EXIST_HOME/config \
-  && ln -s -v -T \
-  $EXIST_HOME/config/controller-config.xml \
-  $EXIST_HOME/webapp/WEB-INF/controller-config.xml \
-  && rm -r /home/*
+ && for i in \
+  'etc' \
+  'lib'; \
+  do cp -r $i $EXIST_HOME; done \
+  && cd ../ && rm -r $EXIST_DIST \
+  && cd /usr/lib/jvm/java-1.8-openjdk/bin \
+  && rm -rv orbd pack200 rmid rmiregistry servertool tnameserv unpack200 \
+  && cd /usr/lib/jvm/java-1.8-openjdk/jre/lib/ext \
+  && rm -v nashorn.jar
 
-FROM openjdk:8-jre-alpine3.8 as base
+ENV CLASSPATH \
+"/usr/local/eXist/etc:\
+/usr/local/eXist/lib/appassembler-booter-2.0.1-SNAPSHOT.jar:\
+/usr/local/eXist/lib/appassembler-model-2.0.1-SNAPSHOT.jar:\
+/usr/local/eXist/lib/plexus-utils-3.0.24.jar:\
+/usr/local/eXist/lib/stax-api-1.0.1.jar:\
+/usr/local/eXist/lib/stax-1.1.1-dev.jar"
 
-COPY --from=maker /usr/local/eXist /usr/local/eXist
-RUN  echo ' - remove  stuff from jre' \
-    && cd /usr/lib/jvm/java-1.8-openjdk/bin \
-    && rm -rv orbd pack200 rmid rmiregistry servertool tnameserv unpack200 \
-    && cd /usr/lib/jvm/java-1.8-openjdk/jre/lib/ext \
-    && rm -v nashorn.jar
-
-ENV LANG C.UTF-8
-ENV EXIST_HOME /usr/local/eXist
-EXPOSE 8080
 WORKDIR $EXIST_HOME
-ENTRYPOINT ["java", "-Djava.awt.headless=true", "-jar", "start.jar", "jetty"]
+# Port configuration
+EXPOSE 8080 8443
+# ENTRYPOINT ["/bin/ash"]
+
+ENTRYPOINT [\
+"java",\
+"-Djava.awt.headless=true",\ 
+"-Dlog4j.configurationFile=/usr/local/eXist/etc/log4j2.xml",\ 
+"-Dexist.home=/usr/local/eXist",\ 
+"-Dexist.configurationFile=/usr/local/eXist/etc/conf.xml",\
+"-Djetty.home=/usr/local/eXist",\ 
+"-Dexist.jetty.config=/usr/local/eXist/etc/jetty/standard.enabled-jetty-configs",\ 
+"-Dapp.name=startup",\ 
+"-Dapp.pid=$$",\
+"-Dapp.repo=/usr/local/eXist/lib",\
+"-Dapp.home=/usr/local/eXist",\
+"-Dbasedir=/usr/local/eXist",\
+"-Dapp.pid=$$",\
+"org.codehaus.mojo.appassembler.booter.AppassemblerBooter"\
+]
+

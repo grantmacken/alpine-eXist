@@ -176,8 +176,10 @@ the name 'ex' is defined in `docker-compose.yml`
 ```
 git clone https://github.com/grantmacken/alpine-eXist.git
 cd alpine-eXist
-docker build .
+# docker build .
+make build
 ```
+
 
 ### Memory config
 To modify -Xmx and CACHE_MEMORY configurations for your exist instance, 

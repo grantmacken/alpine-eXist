@@ -1,27 +1,12 @@
-version: '3.4'
+version: '3.7'
 services:
   exist:
     image: $DOCKER_IMAGE:$DOCKER_TAG
-    container_name: ex
+    container_name: exMaven
     ports:
         - 8080:8080
     networks:
       - www
-    volumes:
-      - type: volume
-        source: data
-        target: ${EXIST_HOME}/${EXIST_DATA_DIR}
-      - type: volume
-        source: config
-        target: ${EXIST_HOME}/${EXIST_CONFIG_DIR}
-volumes:
-  data:
-    driver: local
-    name: exData
-  config:
-    driver: local
-    name: exConfig
-
 networks:
   www:
     driver: bridge
