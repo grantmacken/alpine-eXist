@@ -21,14 +21,22 @@ push:
 clean:
 	@docker images -a | grep "grantmacken" | awk '{print $3}' | xargs docker rmi
 
+.PHONY: up
 up:
 	@./bin/exStartUp
 
+.PHONY: info
+info:
+	@./bin/xQinfo
+
+.PHONY: down
 down:
 	@docker-compose down
 
+.PHONY: log
 log:
 	@docker logs $(CONTAINER_NAME)
 
+.PHONY: run
 run:
 	@docker run -it --rm $(DOCKER_IMAGE):$(DOCKER_TAG) /bin/ash

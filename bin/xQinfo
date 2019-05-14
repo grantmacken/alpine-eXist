@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+source .env
+IPAddress=$(docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $CONTAINER_NAME)
+URL="http://${IPAddress}:8080/exist/rest/db"
+
+function post() {
+curl  -s \
+  -H 'Content-Type: application/xml' \
+  -u 'admin:' \
+  --data-binary @- "$URL"
+}
+
+cat <<EOF | post
+<query xmlns='http://exist.sourceforge.net/NS/exist' start='1' max='99' wrap='no'>
+<text><![CDATA[
+xquery version '3.1';
+try {
+let \$nl := "&#10;"
+return (
+ ' version: ' || system:get-version() || \$nl ,
+ '   build:  ' || system:get-build() || \$nl ,
+ ' revision: ' || system:get-revision() || \$nl ,
+ '     home: ' || system:get-exist-home() || \$nl ,
+ 'repo root: ' || repo:get-root() || \$nl,
+'--------------------------------------------------------',  \$nl ,
+ ' max memory eXist can use: ' || system:get-memory-max() || \$nl ,
+ '      total memory in use: ' || system:get-memory-total() || \$nl ,
+ '    free memory available: ' || system:get-memory-free() || \$nl ,
+ '            system uptime: ' || system:get-uptime()  || \$nl ,
+ '--------------------------------------------------------',  \$nl ,
+ '  system properties ', \$nl ,
+ '  =================',  \$nl ,
+ '         vendor: ' || util:system-property('vendor') || \$nl ,
+ '     vendor-url: ' || util:system-property('vendor-url' ) || \$nl ,
+ '   product-name: ' || util:system-property('product-name') || \$nl ,
+ 'product-version: ' || util:system-property('product-version') || \$nl ,
+ '  product-build: ' || util:system-property('product-build') || \$nl ,
+ '      java.home: ' || util:system-property('java.home') || \$nl ,
+ '   java.version: ' || util:system-property('java.version') || \$nl ,
+ '        os.arch: ' || util:system-property('os.arch') || \$nl ,
+ '        os.name: ' || util:system-property('os.name') || \$nl ,
+ '      user.home: ' || util:system-property('user.home') || \$nl,
+ '      user.name: ' || util:system-property('user.name') || \$nl,
+ '--------------------------------------------------------',  \$nl,
+ ' available environment variables',  \$nl,
+ ' ===============================',  \$nl,
+ for-each(
+  available-environment-variables(),
+  function( \$item ){ \$item || ': '  ||  environment-variable(\$item) || \$nl } ), \$nl,
+  '--------------------------------------------------------',  \$nl ,
+ \$nl
+)} 
+catch * {
+      'Error:' || \$err:code || ': '  || \$err:description || '&#10;'
+}
+]]></text>
+</query>
+EOF
