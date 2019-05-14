@@ -9,4 +9,6 @@ install: make
 script:
   - make up
   - make info
+  - docker stats $(docker ps --format={{.Names}}) --no-stream
+  - docker system df -v
   - make down
