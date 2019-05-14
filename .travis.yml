@@ -10,20 +10,7 @@ env:
     - DOCKER_IMAGE=grantmacken/alpine-exist
     - DOCKER_TAG=v4.4.0
     - VERSION=4.4.0
-install: skip
+install: make
 script:
-  - docker build --tag ${DOCKER_IMAGE}:${DOCKER_TAG} --build-arg "VERSION=${VERSION}" .
-  - docker-compose up -d
-  - docker ps -a | grep 'ex'
-  - N=0;until curl -Isf http://127.0.0.1:8080/ | grep 'Jetty' || [ $N -eq 20 ]; do sleep $(( N++ )); done
-  - curl -Is http://127.0.0.1:8080/ | grep 'Jetty'
-  - docker logs ex | grep 'Server has started'
-  - docker exec ex java -jar start.jar client -q -x 'system:get-version()' | grep "$VERSION"
-  - docker exec ex java -jar start.jar client -q -x 'sm:passwd("admin", "nimda")'
-  - docker exec ex java -jar start.jar client -q -u admin -P nimda -x  'sm:is-dba(xmldb:get-current-user())' | grep 'true'
-  - docker exec ex java -jar start.jar client -q -u admin -P nimda -x  'string-join(repo:list(), "&#10;")' | grep 'dashboard'
-  - docker exec ex ls . | grep 'config'
-  - mkdir -p ./tmp
-  - docker cp ex:/usr/local/eXist/config/conf.xml ./tmp/conf.xml
-  - docker cp ./tmp/conf.xml ex:/usr/local/eXist/config/conf.xml
-  - docker-compose down
+  - make up
+  - make down

@@ -5,7 +5,7 @@
 Available on [dockerhub](https://hub.docker.com/r/grantmacken/alpine-exist)
 
 ```
-docker pull grantmacken/alpine-exist:latest
+docker pull grantmacken/alpine-exist:v20190514
 ```
 
 Test build on [travis-ci](https://travis-ci.org/grantmacken/alpine-eXist)
