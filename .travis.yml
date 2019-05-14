@@ -1,7 +1,7 @@
 sudo: required
 dist: xenial
 os: linux
-language: c
+language: minimal
 services:
   - docker
 
