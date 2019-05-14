@@ -9,10 +9,6 @@ build:
 	@echo 'TASK: build $(DOCKER_IMAGE)$(colon)$(DOCKER_TAG)'
 	@docker build --tag="$(DOCKER_IMAGE)$(colon)$(DOCKER_TAG)" .
 
-.PHONY: tag
-tag:
-	@echo 'v$(VERSION)'
-
 .PHONY: push
 push:
 	@echo '## $@ ##'
@@ -32,7 +28,7 @@ down:
 	@docker-compose down
 
 log:
-	@docker logs exMaven
+	@docker logs $(CONTAINER_NAME)
 
 run:
 	@docker run -it --rm $(DOCKER_IMAGE):$(DOCKER_TAG) /bin/ash
