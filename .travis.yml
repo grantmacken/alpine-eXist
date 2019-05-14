@@ -1,15 +1,10 @@
 sudo: required
-dist: trusty
+dist: xenial
 os: linux
 language: c
 services:
   - docker
 
-env:
-  global:
-    - DOCKER_IMAGE=grantmacken/alpine-exist
-    - DOCKER_TAG=v4.4.0
-    - VERSION=4.4.0
 install: make
 script:
   - make up
