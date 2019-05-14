@@ -1,4 +1,4 @@
-FROM  openjdk:8-jre-alpine3.9 as maker
+FROM  openjdk:8-jre-alpine3.9
 # exposes java in $PATH
 # and following ENV
 # JAVA_HOME
@@ -11,8 +11,6 @@ LABEL maintainer="Grant Mackenzie <grantmacken@gmail.com>" \
 WORKDIR /home
 ENV EXIST_HOME  "/usr/local/eXist"
 ENV EXIST_DIST  "exist-distribution-5.0.0-RC8-SNAPSHOT"
-# COPY .env .env
-# COPY eXist.expect eXist.expect
 
 RUN wget -q \
  http://static.adamretter.org.uk/${EXIST_DIST}-unix.tar.bz2  -O - |  tar -xj \
