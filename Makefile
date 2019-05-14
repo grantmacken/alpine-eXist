@@ -22,7 +22,7 @@ clean:
 	@docker images -a | grep "grantmacken" | awk '{print $3}' | xargs docker rmi
 
 up:
-	@docker-compose up -d
+	@./bin/exStartUp
 
 down:
 	@docker-compose down
