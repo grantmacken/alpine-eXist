@@ -1,13 +1,6 @@
 include .env
-
 colon := :
 $(colon) := :
-
-#VERSION != curl -s "https://api.github.com/repos/eXist-db/exist/releases" | \
- grep -oP "tag_name(.+)eXist-\K([0-9]+\.){2}([0-9]+)(?=\")" | head -1
-
-# VERSION := 4.5.0
-
 default: build
 
 .PHONY: build
@@ -19,7 +12,6 @@ build:
 .PHONY: tag
 tag:
 	@echo 'v$(VERSION)'
-
 
 .PHONY: push
 push:
@@ -35,8 +27,6 @@ clean:
 
 up:
 	@docker-compose up
-	@#docker attach ex
-	@#docker run -it --rm $(DOCKER_IMAGE):$(DOCKER_TAG) /bin/ash
 
 down:
 	@docker-compose down
@@ -45,4 +35,4 @@ log:
 	@docker logs exMaven
 
 run:
-	@docker run -it --rm $(DOCKER_IMAGE):$(DOCKER_TAG)
+	@docker run -it --rm $(DOCKER_IMAGE):$(DOCKER_TAG) /bin/ash

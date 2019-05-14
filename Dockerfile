@@ -2,13 +2,11 @@ FROM  openjdk:8-jre-alpine3.9 as maker
 # exposes java in $PATH
 # and following ENV
 # JAVA_HOME
-# ARG VERSION=4.3.1
-# ENV VERSION=$VERSION
-# LABEL maintainer="Grant Mackenzie <grantmacken@gmail.com>" \
-#       org.label-schema.build-date="$(date --iso)" \
-#       org.label-schema.vcs-ref="$(git rev-parse --short HEAD)" \
-#       org.label-schema.vcs-url="https://github.com/grantmacken/alpine-eXist" \
-#       org.label-schema.schema-version="1.0"
+LABEL maintainer="Grant Mackenzie <grantmacken@gmail.com>" \
+      org.label-schema.build-date="$(date --iso)" \
+      org.label-schema.vcs-ref="$(git rev-parse --short HEAD)" \
+      org.label-schema.vcs-url="https://github.com/grantmacken/alpine-eXist" \
+      org.label-schema.schema-version="1.0"
 
 WORKDIR /home
 ENV EXIST_HOME  "/usr/local/eXist"
@@ -44,9 +42,8 @@ ENV CLASSPATH \
 /usr/local/eXist/lib/stax-1.1.1-dev.jar"
 
 WORKDIR $EXIST_HOME
-# Port configuration
-EXPOSE 8080 8443
-# ENTRYPOINT ["/bin/ash"]
+ENV LANG C.UTF-8
+EXPOSE 8080
 
 ENTRYPOINT [\
 "java",\
