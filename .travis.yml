@@ -8,4 +8,5 @@ services:
 install: make
 script:
   - make up
+  - make log 
   - make down
