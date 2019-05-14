@@ -156,7 +156,6 @@ docker exec ex java -jar start.jar client -q -u admin -P nimda -x \
 
 [![asciicast](https://asciinema.org/a/TdZmETn9AXLd72jaNQVPnPoeC.png)](https://asciinema.org/a/TdZmETn9AXLd72jaNQVPnPoeC)
 
-
 ## Updating Image
 
 To update the base image (of e.g. exist-db) use:
@@ -181,7 +180,4 @@ make build
 ```
 
 
-### Memory config
-To modify -Xmx and CACHE_MEMORY configurations for your exist instance, 
-change `MAX_MEM` and `CACHE_MEM` in `.env` and then build your image in the usual fashion:
 
