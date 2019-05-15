@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source .env
-IPAddress=$(docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $CONTAINER_NAME)
+IPAddress=$(docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $EXIST_CONTAINER_NAME)
 URL="http://${IPAddress}:8080/exist/rest/db"
 
 function post() {
