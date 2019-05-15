@@ -8,6 +8,7 @@ build:
 	@echo "## $@ ##"
 	@echo 'TASK: build $(DOCKER_IMAGE)$(colon)$(DOCKER_TAG)'
 	@docker build --tag="$(DOCKER_IMAGE)$(colon)$(DOCKER_TAG)" .
+	@#docker build --no-cache --tag="$(DOCKER_IMAGE)$(colon)$(DOCKER_TAG)" .
 
 .PHONY: push
 push:

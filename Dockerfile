@@ -33,9 +33,9 @@ RUN wget -q \
 
 ENV CLASSPATH \
 "/usr/local/eXist/etc:\
-/usr/local/eXist/lib/appassembler-booter-2.0.1-SNAPSHOT.jar:\
-/usr/local/eXist/lib/appassembler-model-2.0.1-SNAPSHOT.jar:\
-/usr/local/eXist/lib/plexus-utils-3.0.24.jar:\
+/usr/local/eXist/lib/appassembler-booter-2.1.0.jar:\
+/usr/local/eXist/lib/appassembler-model-2.1.0.jar:\
+/usr/local/eXist/lib/plexus-utils-3.2.0.jar:\
 /usr/local/eXist/lib/stax-api-1.0.1.jar:\
 /usr/local/eXist/lib/stax-1.1.1-dev.jar"
 

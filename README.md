@@ -1,12 +1,14 @@
 # [alpine-eXist](https://github.com/grantmacken/alpine-eXist)
 
-[WIP] minimal docker image for exist-db
+minimal docker alpine image for exist-db
 
 Available on [dockerhub](https://hub.docker.com/r/grantmacken/alpine-exist)
 
 ```
-docker pull grantmacken/alpine-exist:v20190514
+docker pull grantmacken/alpine-exist:v20190515
 ```
+
+Images are built from the linux dist tarball.
 
 Test build on [travis-ci](https://travis-ci.org/grantmacken/alpine-eXist)
 
@@ -135,48 +137,12 @@ location @proxy {
 When the docker image is up and running  `docker-compose up -d`  
 you can issue execute commands on the running container.
 
-Examples:
-
-```
-# list EXIST_HOME dir contents
-docker exec ex ls -al .
-# get eXist version
-docker exec ex java -jar start.jar client -q -u admin -P admin -x \
- 'system:get-version()' | tail -1 ; echo
-# list installed repos
-docker exec ex java -jar start.jar client -q -u admin -P admin -x \
- 'string-join(repo:list(), "&#10;")' ;  echo
-# change the admin pass to 'nimda'
-docker exec ex java -jar start.jar client -q -u admin -P admin -x \
- 'sm:passwd("admin", "nimda")'
-# change the admin pass back to admin
-docker exec ex java -jar start.jar client -q -u admin -P nimda -x \
- 'sm:passwd("admin", "admin")'
-```
-
-[![asciicast](https://asciinema.org/a/TdZmETn9AXLd72jaNQVPnPoeC.png)](https://asciinema.org/a/TdZmETn9AXLd72jaNQVPnPoeC)
-
-## Updating Image
-
-To update the base image (of e.g. exist-db) use:
-```
-docker-compose pull
-docker-compose up -d
-```
-
-you can inspect the container by running:
-```
-docker inspect ex
-```
-the name 'ex' is defined in `docker-compose.yml`
-
 ## Building Image
 
 ```
 git clone https://github.com/grantmacken/alpine-eXist.git
 cd alpine-eXist
-# docker build .
-make build
+make
 ```
 
 
