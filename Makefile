@@ -56,10 +56,10 @@ build: fetch
 	do cp -r $$i ../exist
 	done
 	cd ../
-	# tar -c exist | buildah run Alpine /bin/ash -c 'tar -C /usr/local -xvf - '
-	buildah config --env JAVA_TOOL_OPTIONS=$(JAVA_TOOL_OPTIONS) Alpine
-	buildah config --env CLASSPATH=$(CLASSPATH) Alpine
+	tar -c exist | buildah run Alpine /bin/ash -c 'tar -C /usr/local -xvf - '
 	buildah config \
+	  --env CLASSPATH=$(CLASSPATH) \
+	  --env JAVA_TOOL_OPTIONS=$(JAVA_TOOL_OPTIONS) \
 	  --env LANG=$(LANG) \
 	  --env HOME=/home \
 	  --env EXIST_HOME=$(EXIST_HOME) \
@@ -88,12 +88,25 @@ $(EXIST_DIST)/README.md:
 
 .PHONY: run
 run:
+	podman images
 	podman run --name ex --publish 8080:8080  \
 	  --detach localhost/existdb:v$(EXIST_VER)
 	sleep 10
 	echo ' - display container log '
-	podman logs ex | tail
+	if podman logs ex | tail grep -q 'Error'
+	then
+	 podman logs ex | tail grep -oP 'Error.+$$'
+	 false
+	else
+	podman logs ex 
+	fi
 	echo -n ' - check status and running size: '
 	podman ps --size --format "{{.Names}} {{.Status}} {{.Size}}"
 	echo ' - display the running processes of the container: '
 	podman top ex user pid %C
+
+.PHONY: clean
+clean:
+	rm -vR $(EXIST_DIST) || true
+	rm -vR exist || true
+
