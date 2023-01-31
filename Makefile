@@ -83,4 +83,15 @@ $(EXIST_DIST)/README.md:
 # && cd /usr/lib/jvm/java-1.8-openjdk/jre/lib/ext \
 # && rm -v nashorn.jar
 
-
+.PHONY: run
+run:
+	podman run --name ex --publish 8080:8080  \
+	  --detach localhost/existdb:v$(EXIST_VER)
+	sleep 5
+	echo -n ' - check status and running size: '
+	podman ps --size --format "{{.Names}} {{.Status}} {{.Size}}"
+	sleep 5
+	echo ' - display container log '
+	podman logs xq | tail
+	echo ' - display the running processes of the container: '
+	podman top ex user pid %C
