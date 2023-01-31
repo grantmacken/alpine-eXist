@@ -40,7 +40,10 @@ help: ## show this help
 	sort |
 	awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}-'
 
-build: $(EXIST_DIST)/README.md
+fetch: $(EXIST_DIST)/README.md
+	echo "## $@ ##"
+
+build: fetch
 	echo "## $@ ##"
 	mkdir -p exist/{lib,autodeploy,etc,logs}
 	buildah from --name Alpine alpine:latest
@@ -87,11 +90,10 @@ $(EXIST_DIST)/README.md:
 run:
 	podman run --name ex --publish 8080:8080  \
 	  --detach localhost/existdb:v$(EXIST_VER)
-	sleep 5
+	sleep 10
+	echo ' - display container log '
+	podman logs ex | tail
 	echo -n ' - check status and running size: '
 	podman ps --size --format "{{.Names}} {{.Status}} {{.Size}}"
-	sleep 5
-	echo ' - display container log '
-	podman logs xq | tail
 	echo ' - display the running processes of the container: '
 	podman top ex user pid %C
