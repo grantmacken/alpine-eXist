@@ -1,61 +1,86 @@
-include .env
-colon := :
-$(colon) := :
+SHELL := /bin/bash
+.ONESHELL:
+.SHELLFLAGS := -eu -o pipefail -c
+.DELETE_ON_ERROR:
+MAKEFLAGS += --warn-undefined-variables
+MAKEFLAGS += --no-builtin-rules
+MAKEFLAGS += --silent
+include .env 
+EXIST_DIST := exist-distribution-$(EXIST_VER)
+EXIST_HOME=/usr/local/exist
+JAVA_HOME := /usr/lib/jvm/default-jvm/jre
+LANG := C.UTF-8
+
+JAVA_TOOL_OPTIONS := '-Dfile.encoding=UTF8 \
+-Dsun.jnu.encoding=UTF-8 \
+-Djava.awt.headless=true \
+-Dorg.exist.db-connection.cacheSize=256M \
+-Dorg.exist.db-connection.pool.max=20 \
+-Dlog4j.configurationFile=$(EXIST_HOME)/etc/log4j2.xml \
+-Dexist.home=$(EXIST_HOME) \
+-Dexist.configurationFile=$(EXIST_HOME)/etc/conf.xml \
+-Djetty.home=$(EXIST_HOME) \
+-Dexist.jetty.config=$(EXIST_HOME)/etc/jetty/standard.enabled-jetty-configs \
+ -XX:+UseG1GC \
+ -XX:+UseStringDeduplication \
+ -XX:+UseContainerSupport \
+ -XX:MaxRAMPercentage=75.0 \
+ -XX:+ExitOnOutOfMemoryError'
+
+CLASSPATH :=  '$(EXIST_HOME)/lib/*'
+
+LABELS :=
+
 default: build
 
-.PHONY: build
-build:
-	@echo "## $@ ##"
-	@echo 'TASK: build $(DOCKER_IMAGE)$(colon)$(DOCKER_TAG)'
-	@docker build --tag="$(DOCKER_IMAGE)$(colon)$(DOCKER_TAG)" .
-	@#docker build --no-cache --tag="$(DOCKER_IMAGE)$(colon)$(DOCKER_TAG)" .
+.PHONY: help
+help: ## show this help	
+	@cat $(MAKEFILE_LIST) | 
+	grep -oP '^[a-zA-Z_-]+:.*?## .*$$' |
+	sort |
+	awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}-'
 
-.PHONY: push
-push:
-	@echo '## $@ ##'
-	@echo '$(DOCKER_IMAGE)$(colon)$(DOCKER_TAG)'
-	@docker images -a | grep -oP '$(DOCKER_IMAGE)(.+)$$'
-	@#docker push $(DOCKER_IMAGE)$(colon)latest
-	@docker push $(DOCKER_IMAGE)$(colon)$(DOCKER_TAG)
+build: $(EXIST_DIST)/README.md
+	echo "## $@ ##"
+	mkdir -p exist/{lib,autodeploy,etc,logs}
+	buildah from --name Alpine alpine:latest
+	buildah run Alpine /bin/ash -c 'apk add openjdk8-jre-base'
+	cd $(EXIST_DIST)
+	for i in LICENSE README.md
+	do cp $$i ../exist
+	done
+	for i in etc lib autodeploy
+	do cp -r $$i ../exist
+	done
+	cd ../
+	# tar -c exist | buildah run Alpine /bin/ash -c 'tar -C /usr/local -xvf - '
+	buildah config --env JAVA_TOOL_OPTIONS=$(JAVA_TOOL_OPTIONS) Alpine
+	buildah config --env CLASSPATH=$(CLASSPATH) Alpine
+	buildah config \
+	  --env LANG=$(LANG) \
+	  --env HOME=/home \
+	  --env EXIST_HOME=$(EXIST_HOME) \
+	  --env JAVA_HOME=$(JAVA_HOME) \
+	  --env PATH="$(JAVA_HOME)/bin:$$PATH" \
+	  --cmd  '' \
+	  --entrypoint '[ "java","org.exist.start.Main", "jetty"] ' \
+	  --workingdir $(EXIST_HOME) \
+	  --stop-signal SIGTERM \
+	  --label org.opencontainers.image.base.name=alpine \
+	  --label org.opencontainers.image.title='xqerl' \
+	  --label org.opencontainers.image.description='Erlang XQuery 3.1 Processor and XML Database' \
+	  --label org.opencontainers.image.source=https://github.com/grantmacken/alpine-eXist \
+	  --label org.opencontainers.image.documentation=https://github.com/grantmacken/alpine-eXist \
+	  --label org.opencontainers.image.version=$(EXIST_VER)  Alpine
+	buildah commit --squash Alpine localhost/existdb:v$(EXIST_VER)
 
-.PHONY: clean
-clean:
-	@docker images -a | grep "grantmacken" | awk '{print $3}' | xargs docker rmi
+$(EXIST_DIST)/README.md:
+	echo "## $@ ##"
+	wget -q -nc --show-progress https://github.com/eXist-db/exist/releases/download/eXist-$(EXIST_VER)/$(EXIST_DIST)-unix.tar.bz2 -O - | tar -xj
 
-.PHONY: up
-up:
-	@./bin/exStartUp
+# && cd /usr/lib/jvm/java-1.8-openjdk/bin \
+# && rm -rv orbd pack200 rmid rmiregistry servertool tnameserv unpack200 \
+# && cd /usr/lib/jvm/java-1.8-openjdk/jre/lib/ext \
+# && rm -v nashorn.jar
 
-.PHONY: info
-info:
-	@./bin/xQinfo
-
-.PHONY: down
-down:
-	@docker-compose down
-
-.PHONY: log
-log:
-	@docker logs $(CONTAINER_NAME)
-
-.PHONY: run
-run:
-	@docker run -it --rm $(DOCKER_IMAGE):$(DOCKER_TAG) /bin/ash
-
-.PHONY: rec
-rec:
-	@mkdir -p ../tmp
-	@clear
-	@asciinema rec ../tmp/my.cast \
- --overwrite \
- --title="new maven dist tarball build" \
- --command="\
-sleep 1 && printf %60s | tr ' ' '='  && echo && \
-echo ' - pushing commits to github ... ' && \
-git push && \
-sleep 3 && printf %60s | tr ' ' '-'  && echo && \
-echo ' - watching travis logs... ' && \
-travis logs && \
-sleep 1 && printf %60s | tr ' ' '='  && echo\
-"
 

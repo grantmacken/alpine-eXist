@@ -1,0 +1,23 @@
+name: eXist builds
+on:
+  pull_request:
+    types: [assigned, opened, synchronize, reopened]
+  push:
+    branches-ignore:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: build images
+        run: |
+          make build
+          # podman images
